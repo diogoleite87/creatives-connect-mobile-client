@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ConnectComment, Container, ContainerProfileHeader, ContainerProfileName, ProfileImg, ProfileName, ProfileUser, TextFooter } from "./styles";
+import { ConnectComment, Container, ContainerProfileHeader, ContainerProfileName, ProfileImg, ProfileName, ProfileUser, TextDate, TextFooter } from "./styles";
 import { useNavigation } from "@react-navigation/native";
 import { ConnectComment as ConnectCommentType } from "../../schemas/Models";
 
@@ -22,6 +22,7 @@ const Comment: React.FC<propsComment> = ({ connectComment }) => {
                 </ContainerProfileName>
             </ContainerProfileHeader>
             <ConnectComment>{connectComment.connectText}</ConnectComment>
+            <TextDate>{connectComment.date}</TextDate>
         </Container>
     )
 }

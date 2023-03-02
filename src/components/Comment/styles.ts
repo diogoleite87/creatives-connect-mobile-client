@@ -52,3 +52,8 @@ export const TextFooter = styled.Text`
   margin-left: 5px;
 `
 
+export const TextDate = styled.Text`
+  margin: 5px;
+  font-size: ${RFValue(12)}px;
+  color: ${({ theme }) => theme.COLORS.BLUE1};
+`
