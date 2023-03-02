@@ -13,6 +13,14 @@ export default {
         TEXTDARK: '#000000',
         WHITE_100: '#FFFFFF',
 
+        ARCOIRISRED: '#FF0000',
+        ARCOIRISORANGE: '#FF7F00',
+        ARCOIRISYELLOW: '#FFFF00',
+        ARCOIRISGREEN: '#00FF00',
+        ARCOIRISBLUE: '#00FFFF',
+        ARCOIRISINDIGO: '#0000FF',
+        ARCOIRISVIOLET: '#8B00FF',
+
         RED: '#EB5757',
         ORANGE_300: '#fbb605',
         ORANGE: '#F2994A',
