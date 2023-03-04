@@ -7,15 +7,15 @@ import { ButtonText, Container } from "./styles";
 import { useNavigation } from "@react-navigation/native";
 
 interface propsButtonEdit {
-    function: () => Promise<void>
+    onPress(): void
 }
 
-const ButtonEdit: React.FC = () => {
+const ButtonEdit: React.FC<propsButtonEdit> = ({ onPress }) => {
 
     const navigation = useNavigation();
 
     return (
-        <Container>
+        <Container onPress={onPress}>
             <FontAwesomeIcon icon={faPen} size={RFValue(14)} />
             <ButtonText>Editar</ButtonText>
         </Container>
