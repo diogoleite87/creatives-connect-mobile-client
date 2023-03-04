@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { Profile } from '../../schemas/Models';
 import { ButtonEdit } from '../../components/ButtonEdit';
 import { ButtonEditSubmit, ButtonSignOut, Container, ContainerImg, ContentBody, ContentFooter, ContentHeader, ProfileImg, ProfileUser, TextButton } from './styles';
+import { InputImage } from '../../components/InputImage';
 
 const Settings: React.FC = () => {
 
@@ -15,6 +16,8 @@ const Settings: React.FC = () => {
         profileImage: 'https://avatars.githubusercontent.com/u/62341955?v=4',
         userName: 'diogoleite87'
     } as Profile)
+
+    const [profileImage, setProfileImage] = useState<string>(userProfile.profileImage)
 
 
     const navigation = useNavigation();
@@ -33,8 +36,8 @@ const Settings: React.FC = () => {
             </ContentHeader>
             <ContentBody>
                 <ContainerImg>
-                    <ProfileImg source={{ uri: userProfile.profileImage }} />
-                    <ButtonEdit></ButtonEdit>
+                    <ProfileImg source={{ uri: profileImage }} />
+                    <InputImage setImage={setProfileImage} />
                     <ProfileUser>@{userProfile.userName}</ProfileUser>
                 </ContainerImg>
 
