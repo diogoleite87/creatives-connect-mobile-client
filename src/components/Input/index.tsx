@@ -11,7 +11,7 @@ interface propsInput {
     inputRef?: any
     returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send'
     keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad' | 'number-pad' | 'decimal-pad'
-    onChangeText: (text: string) => void
+    onChangeText?: (text: string) => void
     onSubmitEditing?: () => void
 
 }

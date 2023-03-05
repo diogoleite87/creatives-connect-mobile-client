@@ -13,7 +13,7 @@ export const Container = styled.View`
 `
 
 export const TextInput = styled.TextInput.attrs({
-    placeholderTextColor: '#9E9E9E'
+  placeholderTextColor: '#9E9E9E'
 })`
   width: 100%;
   margin-left: 6px;
