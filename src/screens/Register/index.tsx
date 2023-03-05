@@ -15,11 +15,14 @@ import {
     TextRegisterButton,
     TextError,
     TextSuccess,
-    SubtitleRegister
+    SubtitleRegister,
+    ProfileImg
 } from './styles'
 import { useNavigation } from "@react-navigation/native";
-import { UserService } from "../../services/UserService";
 import { ButtonBack } from "../../components/ButtonBack";
+import { InputImage } from "../../components/InputImage";
+
+import ImagemProfileNull from '../../../assets/imageProfileNull.png'
 
 
 const Register: React.FC = () => {
@@ -36,9 +39,11 @@ const Register: React.FC = () => {
     const [password, setPassword] = useState<string>('');
     const [userName, setUserName] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [image, setImage] = useState<string>()
     const [error, setError] = useState<boolean>(false)
     const [success, setSuccess] = useState<boolean>(false)
-    const [errorMessage, setErrorMessage] = useState<string>('')
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
 
     const createUser = async () => {
 
@@ -54,7 +59,7 @@ const Register: React.FC = () => {
     }
 
     return (
-        <Container>
+        <Container showsVerticalScrollIndicator={false}>
             <Header>
                 <ButtonBack />
                 <Title>Creatives Connect</Title>
@@ -73,6 +78,8 @@ const Register: React.FC = () => {
                         </TextSuccess>
                         : null}
 
+                {image ? <ProfileImg source={{ uri: image }} /> : <ProfileImg source={ImagemProfileNull} />}
+                <InputImage setImage={setImage} />
                 <Input
                     placeholder='Nome'
                     keyboardType='default'

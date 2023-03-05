@@ -4,7 +4,7 @@ import { ButtonEditSubmit, Container, ContentBody, ContentFooter, ContentHeader,
 import { Input } from "../../components/Input"
 import { ButtonConnect } from "../../components/ButtonConnect"
 
-const CommentPage: React.FC = () => {
+const NewCommentPage: React.FC = () => {
 
     const [comment, setComment] = useState<string>('')
 
@@ -21,7 +21,6 @@ const CommentPage: React.FC = () => {
                 <Input
                     placeholder='Comentário'
                     onChangeText={(text: string) => setComment(text)}
-
                 />
                 <ButtonEditSubmit onPress={submitComment}>
                     <TextButton>
@@ -36,4 +35,4 @@ const CommentPage: React.FC = () => {
     )
 }
 
-export { CommentPage }
+export { NewCommentPage }

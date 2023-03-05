@@ -41,7 +41,7 @@ const ConnectPage: React.FC<propsConnect> = ({ route }) => {
                 {route?.params.connectImage ? <ConnectImage source={{ uri: route?.params.connectImage }} /> : <></>}
                 <TextDate>{route?.params.date}</TextDate>
                 <ContainerProfileFooter>
-                    <ContainerAwesomeIcon onPress={() => navigation.navigate('CommentPage' as never)}>
+                    <ContainerAwesomeIcon onPress={() => navigation.navigate('NewCommentPage' as never)}>
                         <FontAwesomeIcon icon={faComment} size={RFValue(18)} />
                         <TextFooter>0 comentários</TextFooter>
                     </ContainerAwesomeIcon>

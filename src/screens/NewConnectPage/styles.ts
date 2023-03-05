@@ -14,15 +14,12 @@ export const Container = styled.View`
 `
 export const ContentHeader = styled.View`
   margin-top: ${RFValue(getStatusBarHeight(true))}px;
-  flex-direction: row;
-  justify-content: space-between;
   width: 100%;
 `
 export const ContentBody = styled.View`
-  flex: 1;
   width: 100%;
   margin-bottom: ${RFValue(20)}px;
-  margin-top: ${RFValue(20)}px;
+  align-items: center;
 `
 export const ContentFooter = styled.View`
   width: 100%;
@@ -30,24 +27,30 @@ export const ContentFooter = styled.View`
   flex-direction: column;
   align-items: center;
 `
-export const Title = styled.Text`
-  font-size: ${RFValue(20)}px;
+
+export const ButtonEditSubmit = styled.TouchableOpacity`
+  width: 50%;
+  height: ${RFValue(35)}px;
+  margin-top: ${RFValue(20)}px;
+  border-radius: ${RFValue(14)}px;
+  align-items: center;
+  justify-content: center;
+  background-color: ${({ theme }) => theme.COLORS.BLUE1};
 `
 
-export const SubTitle = styled.Text`
-  font-size: ${RFValue(14)}px;
-  font-weight: bold;
+export const TextButton = styled.Text`
+  color: ${({ theme }) => theme.COLORS.WHITE}
 `
 
-export const ContainerButtonConnect = styled.TouchableOpacity`
-  background: ${({ theme }) => theme.COLORS.ARCOIRISVIOLET};
-  padding: 15px;
-  border-radius: 100px;
-  position: absolute;
-  bottom: 50;
-  right: 20;
+export const ContainerImg = styled.View`
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: ${RFValue(18)}px;
 `
 
-export const ButtonText = styled.Text`
-   font-size: ${RFValue(14)}px;
+export const Image = styled.Image`
+  margin: 10px;
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
 `
