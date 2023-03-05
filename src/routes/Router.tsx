@@ -18,7 +18,8 @@ export function Router() {
     }
     return (
         <NavigationContainer>
-            {authData ? <AppStack /> : <AuthStack />}
+            {/* {authData ? <AppStack /> : <AuthStack />} */}
+            {authData ? <AuthStack /> : <AppStack />}
         </NavigationContainer>
     )
 }

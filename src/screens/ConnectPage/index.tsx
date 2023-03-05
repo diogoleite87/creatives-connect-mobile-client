@@ -30,7 +30,7 @@ const ConnectPage: React.FC<propsConnect> = ({ route }) => {
         <Container>
             <ContainerHeader>
                 <ButtonBack />
-                <ContainerConnectHeader onPress={() => navigation.navigate('Profile' as never, route?.params.userName as never)}>
+                <ContainerConnectHeader onPress={() => navigation.navigate('Profile' as never)}>
                     <ProfileImg source={{ uri: route?.params.profileImage }} />
                     <ContainerProfileName>
                         <ProfileName>{route?.params.name}</ProfileName>
@@ -41,7 +41,7 @@ const ConnectPage: React.FC<propsConnect> = ({ route }) => {
                 {route?.params.connectImage ? <ConnectImage source={{ uri: route?.params.connectImage }} /> : <></>}
                 <TextDate>{route?.params.date}</TextDate>
                 <ContainerProfileFooter>
-                    <ContainerAwesomeIcon>
+                    <ContainerAwesomeIcon onPress={() => navigation.navigate('CommentPage' as never)}>
                         <FontAwesomeIcon icon={faComment} size={RFValue(18)} />
                         <TextFooter>0 comentários</TextFooter>
                     </ContainerAwesomeIcon>
