@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { UserService } from '../../services/UserService'
 import { Connect as ConnectType, Profile } from '../../schemas/Models'
-import { Container, ContentBody, ContentFooter, ContentHeader, SubTitle, Title } from './styles';
+import { Container, ContainerButtonConnect, ContentBody, ContentFooter, ContentHeader, SubTitle, Title } from './styles';
 import { ButtonProfile } from '../../components/ButtonProfile';
 import { ButtonConnect } from '../../components/ButtonConnect';
 import { ConnectList } from '../../components/ConnectList';
+import { useNavigation } from '@react-navigation/native';
+import { faPen } from '@fortawesome/free-solid-svg-icons/faPen'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const data = [{
     comment: 10,
@@ -57,6 +61,8 @@ const Home: React.FC = () => {
     const [user, setUser] = useState<Profile | undefined>()
     const [connects, setConnects] = useState<ConnectType[]>(data)
 
+    const navigation = useNavigation()
+
     useEffect(() => {
         UserService.getProfile().then(res => {
             setUser(res.data)
@@ -69,20 +75,16 @@ const Home: React.FC = () => {
     return (
         <Container>
             <ContentHeader>
-                {/* <Title>Bem Vindo, {user?.name}!</Title> */}
-                <Title>Bem Vindo, Diogo Leite!</Title>
+                <ButtonConnect />
                 <ButtonProfile />
             </ContentHeader>
             <ContentBody>
                 <ConnectList connects={connects} />
             </ContentBody>
-            <ContentFooter>
-                <SubTitle>
-                    <ButtonConnect />
-                </SubTitle>
-            </ContentFooter>
+            <ContainerButtonConnect onPress={() => navigation.navigate('NewConnectPage' as never)}>
+                <FontAwesomeIcon icon={faPen} size={RFValue(25)} color='white' />
+            </ContainerButtonConnect>
         </Container >
-
     )
 
 }

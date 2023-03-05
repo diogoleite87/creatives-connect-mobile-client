@@ -38,3 +38,16 @@ export const SubTitle = styled.Text`
   font-size: ${RFValue(14)}px;
   font-weight: bold;
 `
+
+export const ContainerButtonConnect = styled.TouchableOpacity`
+  background: ${({ theme }) => theme.COLORS.ARCOIRISVIOLET};
+  padding: 15px;
+  border-radius: 100px;
+  position: absolute;
+  bottom: 50;
+  right: 20;
+`
+
+export const ButtonText = styled.Text`
+   font-size: ${RFValue(14)}px;
+`
