@@ -1,19 +1,21 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Home } from '../screens/Home';
-import { Profile } from '../screens/Profile';
-import { ConnectPage } from '../screens/ConnectPage';
-import { Settings } from '../screens/Settings';
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { ConnectPage } from "../screens/ConnectPage"
+import { Profile } from "../screens/Profile"
+import { Settings } from "../screens/Settings"
+import { Showcase } from "../screens/teste"
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator()
 
 export function AppStack() {
-
-    return (
-        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='Home'>
-            <Stack.Screen name='Home' component={Home} />
-            <Stack.Screen name='Profile' component={Profile} />
-            <Stack.Screen name='ConnectPage' component={ConnectPage} />
-            <Stack.Screen name='Settings' component={Settings} />
-        </Stack.Navigator>
-    )
+  return (
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="Home"
+    >
+      <Stack.Screen name="Home" component={Showcase} />
+      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="ConnectPage" component={ConnectPage} />
+      <Stack.Screen name="Settings" component={Settings} />
+    </Stack.Navigator>
+  )
 }
