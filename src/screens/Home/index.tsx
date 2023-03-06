@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { UserService } from '../../services/UserService'
 import { Connect as ConnectType, Profile } from '../../schemas/Models'
-import { Container, ContainerButtonConnect, ContentBody, ContentFooter, ContentHeader, SubTitle, Title } from './styles';
+import { Container, ContainerButtonConnect, ContainerButtonSearch, ContentBody, ContentFooter, ContentHeader, SubTitle, Title } from './styles';
 import { ButtonProfile } from '../../components/ButtonProfile';
 import { ButtonConnect } from '../../components/ButtonConnect';
 import { ConnectList } from '../../components/ConnectList';
 import { useNavigation } from '@react-navigation/native';
 import { faPen } from '@fortawesome/free-solid-svg-icons/faPen'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { RFValue } from 'react-native-responsive-fontsize';
 
@@ -81,6 +82,9 @@ const Home: React.FC = () => {
             <ContentBody>
                 <ConnectList connects={connects} />
             </ContentBody>
+            <ContainerButtonSearch onPress={() => navigation.navigate('SearchPage' as never)}>
+                <FontAwesomeIcon icon={faMagnifyingGlass} size={RFValue(25)} color='white' />
+            </ContainerButtonSearch>
             <ContainerButtonConnect onPress={() => navigation.navigate('NewConnectPage' as never)}>
                 <FontAwesomeIcon icon={faPen} size={RFValue(25)} color='white' />
             </ContainerButtonConnect>

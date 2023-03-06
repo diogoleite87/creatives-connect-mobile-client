@@ -5,6 +5,7 @@ import { ConnectPage } from '../screens/ConnectPage';
 import { Settings } from '../screens/Settings';
 import { NewCommentPage } from '../screens/NewCommentPage';
 import { NewConnectPage } from '../screens/NewConnectPage';
+import { SearchPage } from '../screens/SearchPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ export function AppStack() {
             <Stack.Screen name='Settings' component={Settings} />
             <Stack.Screen name='NewCommentPage' component={NewCommentPage} />
             <Stack.Screen name='NewConnectPage' component={NewConnectPage} />
+            <Stack.Screen name='SearchPage' component={SearchPage} />
         </Stack.Navigator>
     )
 }
