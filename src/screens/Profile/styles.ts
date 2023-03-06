@@ -27,6 +27,7 @@ export const ContainerProfile = styled.View`
 
 export const ContainerProfileHeader = styled.View`
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
 `
 
@@ -35,6 +36,11 @@ export const ProfileImg = styled.Image`
   width: 70px;
   height: 70px;
   border-radius: 100px;
+`
+
+export const ContentProfileHeader = styled.View`
+  flex-direction: row;
+  align-items: center;
 `
 
 export const ProfileUser = styled.Text`

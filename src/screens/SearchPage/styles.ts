@@ -12,51 +12,52 @@ export const Container = styled.View`
   justify-content: space-between;
   background-color: ${({ theme }) => theme.COLORS.BACKGROUNDLIGHT};
 `
+
 export const ContentHeader = styled.View`
   margin-top: ${RFValue(getStatusBarHeight(true))}px;
-  flex-direction: row;
-  justify-content: space-between;
   width: 100%;
 `
+
 export const ContentBody = styled.View`
-  flex: 1;
   width: 100%;
   margin-bottom: ${RFValue(20)}px;
-  margin-top: ${RFValue(20)}px;
+  align-items: center;
 `
+
 export const ContentFooter = styled.View`
   width: 100%;
   margin-bottom: ${RFValue(20)}px;
   flex-direction: column;
   align-items: center;
 `
-export const Title = styled.Text`
-  font-size: ${RFValue(20)}px;
+
+export const ContainerProfile = styled.View`
+ width: 100%;
+ margin: 10px;
+ margin-top: ${RFValue(20)}px;
+ flex-direction: row;
+ justify-content: space-between;
+ align-items: center;
 `
 
-export const SubTitle = styled.Text`
-  font-size: ${RFValue(14)}px;
+export const Profile = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+`
+
+export const ContainerProfileName = styled.View`
+  flex-direction: column;
+  margin-left: ${RFValue(10)}px;
+`
+export const Name = styled.Text`
+  font-size: ${RFValue(16)}px;
   font-weight: bold;
 `
-
-export const ContainerButtonConnect = styled.TouchableOpacity`
-  background: ${({ theme }) => theme.COLORS.ARCOIRISVIOLET};
-  padding: 15px;
-  border-radius: 100px;
-  position: absolute;
-  bottom: 50;
-  right: 20;
+export const UserName = styled.Text`
+  font-size: ${RFValue(12)}px;
 `
-
-export const ContainerButtonSearch = styled.TouchableOpacity`
-  background: ${({ theme }) => theme.COLORS.ARCOIRISORANGE};
-  padding: 15px;
+export const ProfileImage = styled.Image`
+  width: 60px;
+  height: 60px;
   border-radius: 100px;
-  position: absolute;
-  bottom: 120;
-  right: 20;
-`
-
-export const ButtonText = styled.Text`
-   font-size: ${RFValue(14)}px;
 `

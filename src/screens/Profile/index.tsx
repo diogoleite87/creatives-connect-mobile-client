@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { ProfileCity, Container, ContainerHeader, ContainerProfile, ContainerProfileFooter, ContainerProfileHeader, ContainerProfileName, ProfileBio, ProfileImg, ProfileName, ProfileUser, ProfileBithday, ContainerAwesomeIcon, ContainerButtons } from "./styles"
+import { ProfileCity, Container, ContainerHeader, ContainerProfile, ContainerProfileFooter, ContainerProfileHeader, ContainerProfileName, ProfileBio, ProfileImg, ProfileName, ProfileUser, ProfileBithday, ContainerAwesomeIcon, ContainerButtons, ContentProfileHeader } from "./styles"
 import { ButtonBack } from "../../components/ButtonBack"
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons/faLocationDot'
 import { faCakeCandles } from '@fortawesome/free-solid-svg-icons/faCakeCandles'
@@ -9,6 +9,7 @@ import { RFValue } from "react-native-responsive-fontsize"
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
 import { CommentList } from "../../components/CommentList"
 import { ButtonSettings } from "../../components/ButtonSettings"
+import { ButtonFollow } from "../../components/ButtonFollow"
 
 interface propsProfile {
     route?: {
@@ -42,11 +43,14 @@ const Profile: React.FC<propsProfile> = ({ route }) => {
                 </ContainerButtons>
                 <ContainerProfile>
                     <ContainerProfileHeader>
-                        <ProfileImg source={{ uri: profileStatus?.profileImage }} />
-                        <ContainerProfileName>
-                            <ProfileName>{profileStatus?.name}</ProfileName>
-                            <ProfileUser>@{profileStatus?.userName}</ProfileUser>
-                        </ContainerProfileName>
+                        <ContentProfileHeader>
+                            <ProfileImg source={{ uri: profileStatus?.profileImage }} />
+                            <ContainerProfileName>
+                                <ProfileName>{profileStatus?.name}</ProfileName>
+                                <ProfileUser>@{profileStatus?.userName}</ProfileUser>
+                            </ContainerProfileName>
+                        </ContentProfileHeader>
+                        <ButtonFollow userFollow="filipe2493" />
                     </ContainerProfileHeader>
                     <ProfileBio>{profileStatus?.bio}</ProfileBio>
                     <ContainerProfileFooter>
