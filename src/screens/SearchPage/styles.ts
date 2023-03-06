@@ -30,3 +30,34 @@ export const ContentFooter = styled.View`
   flex-direction: column;
   align-items: center;
 `
+
+export const ContainerProfile = styled.View`
+ width: 100%;
+ margin: 10px;
+ margin-top: ${RFValue(20)}px;
+ flex-direction: row;
+ justify-content: space-between;
+ align-items: center;
+`
+
+export const Profile = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+`
+
+export const ContainerProfileName = styled.View`
+  flex-direction: column;
+  margin-left: ${RFValue(10)}px;
+`
+export const Name = styled.Text`
+  font-size: ${RFValue(16)}px;
+  font-weight: bold;
+`
+export const UserName = styled.Text`
+  font-size: ${RFValue(12)}px;
+`
+export const ProfileImage = styled.Image`
+  width: 60px;
+  height: 60px;
+  border-radius: 100px;
+`
