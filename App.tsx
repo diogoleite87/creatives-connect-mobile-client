@@ -35,7 +35,7 @@ const App: React.FC = () => {
 
       <StatusBar
         style='dark'
-        translucent
+        translucent={false}
         backgroundColor='transparent'
       />
       <AuthProvider><Router /></AuthProvider>
