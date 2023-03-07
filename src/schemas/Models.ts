@@ -1,12 +1,8 @@
+import { FindUserByUsernameQuery } from "../generated/api-types"
+
 export type AuthData = {
-    user: {
-        id: number
-        name: string
-        email: string
-        created_at: string
-        updated_at: string
-    },
-    token: string
+    userName: string
+    token: string | null | undefined
 }
 
 export type Profile = {
