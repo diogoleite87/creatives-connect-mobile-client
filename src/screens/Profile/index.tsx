@@ -10,6 +10,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
 import { CommentList } from "../../components/CommentList"
 import { ButtonSettings } from "../../components/ButtonSettings"
 import { ButtonFollow } from "../../components/ButtonFollow"
+import { useLazyQuery, useQuery } from "@apollo/client"
+import { FindUserByUsernameQuery, FindUserByUsernameQueryVariables } from "../../generated/api-types"
+import { FIND_USER_BY_USERNAME } from "../../graphql/user/queries"
+import ImagemProfileNull from '../../../assets/imageProfileNull.png'
+import { useAuth } from "../../hooks/useAuth"
 
 interface propsProfile {
     route?: {
@@ -21,17 +26,13 @@ interface propsProfile {
 
 const Profile: React.FC<propsProfile> = ({ route }) => {
 
-    const [profileStatus, setProfileStatus] = useState<ProfileModel>({
-        profileImage: 'https://avatars.githubusercontent.com/u/62341955?v=4',
-        name: 'Diogo Leite',
-        userName: 'diogoleite87',
-        bio: 'O valor das coisas não está no tempo que elas duram, mas na intensidade com que acontecem. Por isso existem momentos inesquecíveis, coisas inexplicáveis e pessoas incomparáveis.',
-        birthday: '19 de Abril',
-        city: 'João Monlevade, Mg'
-    } as ProfileModel);
+    const { authData } = useAuth()
 
-    useEffect(() => {
-        console.log(route?.params)
+    const { data, error, loading } = useQuery<
+        FindUserByUsernameQuery,
+        FindUserByUsernameQueryVariables
+    >(FIND_USER_BY_USERNAME, {
+        variables: { username: authData?.userName ? authData?.userName : '' }
     })
 
     return (
@@ -44,23 +45,24 @@ const Profile: React.FC<propsProfile> = ({ route }) => {
                 <ContainerProfile>
                     <ContainerProfileHeader>
                         <ContentProfileHeader>
-                            <ProfileImg source={{ uri: profileStatus?.profileImage }} />
+                            <ProfileImg source={data?.findUserByUsername.picture == undefined ? { uri: data?.findUserByUsername.picture } : ImagemProfileNull} />
                             <ContainerProfileName>
-                                <ProfileName>{profileStatus?.name}</ProfileName>
-                                <ProfileUser>@{profileStatus?.userName}</ProfileUser>
+                                <ProfileName>{data?.findUserByUsername.name}</ProfileName>
+                                <ProfileUser>@{data?.findUserByUsername.username}</ProfileUser>
                             </ContainerProfileName>
                         </ContentProfileHeader>
-                        <ButtonFollow userFollow="filipe2493" />
+                        {route?.params.userName != authData?.userName ? <ButtonFollow userFollow="filipe2493" /> : <></>}
+
                     </ContainerProfileHeader>
-                    <ProfileBio>{profileStatus?.bio}</ProfileBio>
+                    <ProfileBio>{data?.findUserByUsername.biography}</ProfileBio>
                     <ContainerProfileFooter>
                         <ContainerAwesomeIcon>
                             <FontAwesomeIcon icon={faLocationDot} size={RFValue(12)} />
-                            <ProfileCity>{profileStatus?.city}</ProfileCity>
+                            <ProfileCity>{data?.findUserByUsername.city}</ProfileCity>
                         </ContainerAwesomeIcon>
                         <ContainerAwesomeIcon>
                             <FontAwesomeIcon icon={faCakeCandles} size={RFValue(12)} />
-                            <ProfileBithday>{profileStatus?.birthday}</ProfileBithday>
+                            <ProfileBithday>{data?.findUserByUsername.birthday}</ProfileBithday>
                         </ContainerAwesomeIcon>
                     </ContainerProfileFooter>
                 </ContainerProfile>
