@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { UserService } from '../../services/UserService'
 import { Connect as ConnectType, Profile } from '../../schemas/Models'
 import { Container, ContainerButtonConnect, ContainerButtonSearch, ContentBody, ContentFooter, ContentHeader, SubTitle, Title } from './styles';
 import { ButtonProfile } from '../../components/ButtonProfile';
@@ -10,6 +9,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons/faPen'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { FindUserByUsernameQuery } from '../../generated/api-types';
 
 const data = [{
     comment: 10,
@@ -59,17 +59,13 @@ const data = [{
 
 const Home: React.FC = () => {
 
-    const [user, setUser] = useState<Profile | undefined>()
+    const [user, setUser] = useState<FindUserByUsernameQuery>({} as FindUserByUsernameQuery)
     const [connects, setConnects] = useState<ConnectType[]>(data)
 
     const navigation = useNavigation()
 
     useEffect(() => {
-        UserService.getProfile().then(res => {
-            setUser(res.data)
-        }).catch(err => {
-            console.log(err.response.data)
-        })
+
 
     }, [])
 

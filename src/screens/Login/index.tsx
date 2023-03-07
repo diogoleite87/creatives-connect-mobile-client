@@ -19,6 +19,9 @@ import {
 } from "./styles"
 
 import { useAuth } from "../../hooks/useAuth"
+import { useMutation } from "@apollo/client"
+import { LoginMutation, LoginMutationVariables, User } from "../../generated/api-types"
+import { LOGIN } from "../../graphql/auth/mutations"
 
 const Login: React.FC = () => {
   const navigation = useNavigation()
@@ -27,9 +30,28 @@ const Login: React.FC = () => {
 
   const { signIn } = useAuth()
 
-  const [email, setEmail] = useState<string>("")
+  const [userName, setUsername] = useState<string>("")
   const [password, setPassword] = useState<string>("")
-  const [error, setError] = useState<boolean>(false)
+  const [errorLogin, setErrorLogin] = useState<boolean>(false)
+  const [token, setToken] = useState<string | null>(null)
+
+  const [getToken, { data: tokenData, error: tokenError, loading: tokenLoading }] = useMutation<
+    LoginMutation,
+    LoginMutationVariables
+  >(LOGIN, {
+    onCompleted(data, clientOptions) {
+      setToken(data.login.token ? data.login.token : null)
+    }, onError(error, clientOptions) {
+      setErrorLogin(true)
+    },
+  })
+
+  const submit = async () => {
+    await getToken({ variables: { username: userName, password } })
+
+    token ? signIn({ userName, token }) : setErrorLogin(true)
+  }
+
 
   return (
     <Container>
@@ -39,16 +61,16 @@ const Login: React.FC = () => {
       </ContentHeader>
 
       <ContentBody>
-        {error ? (
+        {errorLogin ? (
           <TextError>
             Error ao efetuar o login, verifique os campus e tente novamente
           </TextError>
         ) : null}
 
         <Input
-          placeholder="Email"
-          keyboardType="email-address"
-          onChangeText={(text: string) => setEmail(text)}
+          placeholder="Nome de Usuário"
+          keyboardType="default"
+          onChangeText={(text: string) => setUsername(text)}
           returnKeyType="next"
           onSubmitEditing={() => passwordRef.current.focus()}
         />
@@ -58,7 +80,7 @@ const Login: React.FC = () => {
           secureTextEntry
           onChangeText={(text: string) => setPassword(text)}
           returnKeyType="done"
-          onSubmitEditing={() => signIn({ email, password })}
+          onSubmitEditing={() => submit()}
         />
       </ContentBody>
 
@@ -72,7 +94,7 @@ const Login: React.FC = () => {
           </TextRegisterButton>
         </RegisterView>
 
-        <ButtonSubmit onPress={() => signIn({ email, password })}>
+        <ButtonSubmit onPress={submit}>
           <TextButtonSubmit>Entrar</TextButtonSubmit>
         </ButtonSubmit>
       </ContentFooter>
