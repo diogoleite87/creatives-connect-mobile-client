@@ -44,8 +44,8 @@ export const ContainerButtonConnect = styled.TouchableOpacity`
   padding: 15px;
   border-radius: 100px;
   position: absolute;
-  bottom: 50;
-  right: 20;
+  bottom: 50px;
+  right: 20px;
 `
 
 export const ContainerButtonSearch = styled.TouchableOpacity`
@@ -53,8 +53,8 @@ export const ContainerButtonSearch = styled.TouchableOpacity`
   padding: 15px;
   border-radius: 100px;
   position: absolute;
-  bottom: 120;
-  right: 20;
+  bottom: 120px;
+  right: 20px;
 `
 
 export const ButtonText = styled.Text`
