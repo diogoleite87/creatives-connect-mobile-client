@@ -20,8 +20,8 @@ export function Router() {
   return (
     <ApolloProvider client={client}>
       <NavigationContainer>
-        {/* {authData ? <AppStack /> : <AuthStack />} */}
-        {authData ? <AuthStack /> : <AppStack />}
+        {authData ? <AppStack /> : <AuthStack />}
+        {/* {authData ? <AuthStack /> : <AppStack />} */}
       </NavigationContainer>
     </ApolloProvider>
   )

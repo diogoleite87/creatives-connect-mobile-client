@@ -2,7 +2,10 @@ import React, { createContext, ReactElement, ReactNode, useEffect, useState } fr
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoginDTO } from "../schemas/DTO";
 import { AuthData } from "../schemas/Models";
-import { AuthService } from "../services/AuthService";
+// import { AuthService } from "../services/AuthService";
+import { useQuery, useMutation } from "@apollo/client";
+import { LoginMutation, LoginMutationVariables } from "../generated/api-types";
+import { LOGIN } from "../graphql/auth/mutations";
 
 interface IProps {
     children: ReactNode
@@ -11,7 +14,7 @@ interface IProps {
 interface AuthContextData {
 
     authData?: AuthData
-    signIn: (login: LoginDTO) => Promise<void>,
+    signIn: (userData: AuthData) => Promise<void>,
     signOut: () => Promise<void>
     loading: boolean
 }
@@ -37,14 +40,10 @@ export const AuthProvider: React.FC<IProps> = ({ children }): ReactElement => {
         setLoading(false)
     }
 
-    const signIn = async (login: LoginDTO): Promise<void> => {
+    const signIn = async (userData: AuthData) => {
 
-        await AuthService.postAuthLogin(login).then(res => {
-            setAuthData(res.data)
-            AsyncStorage.setItem('@AuthData', JSON.stringify(res.data))
-        }).catch(err => {
-
-        });
+        setAuthData(userData)
+        AsyncStorage.setItem('@AuthData', JSON.stringify(userData))
 
     }
 
