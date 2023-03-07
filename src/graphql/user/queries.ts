@@ -8,9 +8,7 @@ export const FIND_USER_BY_USERNAME = gql`
       city
       birthday
       picture
-      email
       biography
-      createdAt
     }
   }
 `
