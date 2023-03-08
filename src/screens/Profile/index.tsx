@@ -10,11 +10,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
 import { CommentList } from "../../components/CommentList"
 import { ButtonSettings } from "../../components/ButtonSettings"
 import { ButtonFollow } from "../../components/ButtonFollow"
-import { useLazyQuery, useQuery } from "@apollo/client"
+import { useQuery } from "@apollo/client"
 import { FindUserByUsernameQuery, FindUserByUsernameQueryVariables } from "../../generated/api-types"
 import { FIND_USER_BY_USERNAME } from "../../graphql/user/queries"
 import ImagemProfileNull from '../../../assets/imageProfileNull.png'
 import { useAuth } from "../../hooks/useAuth"
+import { timestampToDate } from "../../utils/timestampToDate"
 
 interface propsProfile {
     route?: {
@@ -40,7 +41,7 @@ const Profile: React.FC<propsProfile> = ({ route }) => {
             <ContainerHeader>
                 <ContainerButtons>
                     <ButtonBack />
-                    <ButtonSettings navigationScreen={"Settings"} />
+                    {data?.findUserByUsername.username == route?.params.userName ? <ButtonSettings navigationScreen={"Settings"} /> : <></>}
                 </ContainerButtons>
                 <ContainerProfile>
                     <ContainerProfileHeader>
@@ -62,7 +63,7 @@ const Profile: React.FC<propsProfile> = ({ route }) => {
                         </ContainerAwesomeIcon>
                         <ContainerAwesomeIcon>
                             <FontAwesomeIcon icon={faCakeCandles} size={RFValue(12)} />
-                            <ProfileBithday>{data?.findUserByUsername.birthday}</ProfileBithday>
+                            <ProfileBithday>{timestampToDate(data?.findUserByUsername.birthday)}</ProfileBithday>
                         </ContainerAwesomeIcon>
                     </ContainerProfileFooter>
                 </ContainerProfile>
