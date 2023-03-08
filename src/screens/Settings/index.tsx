@@ -3,31 +3,32 @@ import React, { useState } from 'react';
 import { ButtonBack } from '../../components/ButtonBack';
 import { Input } from '../../components/Input';
 import { useAuth } from '../../hooks/useAuth';
-import { Profile } from '../../schemas/Models';
-import { ButtonEdit } from '../../components/ButtonEdit';
+import { useQuery } from "@apollo/client"
 import { ButtonEditSubmit, ButtonSignOut, Container, ContainerImg, ContentBody, ContentFooter, ContentHeader, ProfileImg, ProfileUser, TextButton } from './styles';
 import { InputImage } from '../../components/InputImage';
+import { FindUserByUsernameQuery, FindUserByUsernameQueryVariables } from '../../generated/api-types';
+import { FIND_USER_BY_USERNAME } from '../../graphql/user/queries';
+import ImagemProfileNull from '../../../assets/imageProfileNull.png'
 
 const Settings: React.FC = () => {
 
-    const [userProfile, setUserProfile] = useState<Profile>({
-        name: 'Diogo Leite',
-        bio: 'O valor das coisas não está no tempo que elas duram, mas na intensidade com que acontecem. Por isso existem momentos inesquecíveis, coisas inexplicáveis e pessoas incomparáveis.',
-        profileImage: 'https://avatars.githubusercontent.com/u/62341955?v=4',
-        userName: 'diogoleite87'
-    } as Profile)
-
-    const [profileImage, setProfileImage] = useState<string>(userProfile.profileImage)
-
+    const [profileImage, setProfileImage] = useState<string | null | undefined>()
 
     const navigation = useNavigation();
 
-    const { signOut } = useAuth();
+    const { signOut, authData } = useAuth();
 
     const editProfile = async () => {
 
 
     }
+
+    const { data, error, loading } = useQuery<
+        FindUserByUsernameQuery,
+        FindUserByUsernameQueryVariables
+    >(FIND_USER_BY_USERNAME, {
+        variables: { username: authData?.userName ? authData?.userName : '' }
+    })
 
     return (
         <Container>
@@ -36,20 +37,20 @@ const Settings: React.FC = () => {
             </ContentHeader>
             <ContentBody>
                 <ContainerImg>
-                    <ProfileImg source={{ uri: profileImage }} />
+                    <ProfileImg source={data?.findUserByUsername.picture == undefined ? { uri: data?.findUserByUsername.picture } : ImagemProfileNull} />
                     <InputImage setImage={setProfileImage} />
-                    <ProfileUser>@{userProfile.userName}</ProfileUser>
+                    <ProfileUser>@{data?.findUserByUsername.username}</ProfileUser>
                 </ContainerImg>
 
                 <Input
                     placeholder='Nome'
                     keyboardType='default'
-                    value={userProfile.name}
+                    value={data?.findUserByUsername.name}
                 />
                 <Input
                     placeholder='Biografia'
                     keyboardType='default'
-                    value={userProfile.bio}
+                    value={data?.findUserByUsername.biography ? data?.findUserByUsername.biography : ''}
                 />
 
             </ContentBody>
