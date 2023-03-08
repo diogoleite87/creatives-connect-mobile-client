@@ -80,7 +80,7 @@ const Login: React.FC = () => {
           secureTextEntry
           onChangeText={(text: string) => setPassword(text)}
           returnKeyType="done"
-          onSubmitEditing={() => submit()}
+          onSubmitEditing={submit}
         />
       </ContentBody>
 
