@@ -5,15 +5,45 @@ import { Input } from "../../components/Input"
 import { ButtonConnect } from "../../components/ButtonConnect"
 import { InputImage } from "../../components/InputImage"
 import NoImage from '../../../assets/noImage.png'
+import { gql, useMutation } from "@apollo/client"
+import { CreatePostInput } from "../../generated/api-types"
+import { useNavigation } from "@react-navigation/native"
+import { imageToBase64 } from "../../utils/imageToBase64"
+import { useAuth } from "../../hooks/useAuth"
 
 const NewConnectPage: React.FC = () => {
 
     const [connect, setConnect] = useState<string>('')
     const [image, setImage] = useState<string | null>(null)
 
-    const submitConnect = async () => {
+    const { authData } = useAuth()
 
+    const navigation = useNavigation()
+
+    const submit = async () => {
+
+        let imageBase64 = image ? await imageToBase64(image) : 'undefined'
+
+        console.log({ picture: imageBase64 })
+
+        await submitConnect({
+            variables: { username: authData?.userName!, postInput: { picture: imageBase64, text: connect } as CreatePostInput }
+        })
     }
+
+    const [submitConnect, { loading, error }] = useMutation(gql`
+    mutation createPost($username: String!, $postInput: CreatePostInput!) {
+        createPost(username: $username, postInput: $postInput) {
+          id
+          text
+          picture
+        }
+      }
+    `, {
+        onCompleted(data, clientOptions) {
+            navigation.goBack()
+        },
+    })
 
     return (
         <Container>
@@ -29,7 +59,7 @@ const NewConnectPage: React.FC = () => {
                     {image ? <Image source={{ uri: image }} /> : <Image source={NoImage} />}
                     <InputImage setImage={setImage} />
                 </ContainerImg>
-                <ButtonEditSubmit onPress={submitConnect}>
+                <ButtonEditSubmit onPress={submit}>
                     <TextButton>
                         Connect
                     </TextButton>

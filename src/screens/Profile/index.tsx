@@ -4,23 +4,23 @@ import { ButtonBack } from "../../components/ButtonBack"
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons/faLocationDot'
 import { faCakeCandles } from '@fortawesome/free-solid-svg-icons/faCakeCandles'
 
-import { Profile as ProfileModel } from "../../schemas/Models"
 import { RFValue } from "react-native-responsive-fontsize"
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
-import { CommentList } from "../../components/CommentList"
 import { ButtonSettings } from "../../components/ButtonSettings"
 import { ButtonFollow } from "../../components/ButtonFollow"
-import { useQuery } from "@apollo/client"
+import { gql, useLazyQuery, useQuery } from "@apollo/client"
 import { FindUserByUsernameQuery, FindUserByUsernameQueryVariables } from "../../generated/api-types"
 import { FIND_USER_BY_USERNAME } from "../../graphql/user/queries"
 import ImagemProfileNull from '../../../assets/imageProfileNull.png'
 import { useAuth } from "../../hooks/useAuth"
 import { timestampToDate } from "../../utils/timestampToDate"
+import { ConnectList } from "../../components/ConnectList"
+import { Connect } from "../../schemas/Models"
 
 interface propsProfile {
     route?: {
         params: {
-            userName: string
+            username: string
         }
     }
 }
@@ -29,11 +29,41 @@ const Profile: React.FC<propsProfile> = ({ route }) => {
 
     const { authData } = useAuth()
 
-    const { data, error, loading } = useQuery<
+    const { data: userData, error: userError, loading: userLoading } = useQuery<
         FindUserByUsernameQuery,
         FindUserByUsernameQueryVariables
     >(FIND_USER_BY_USERNAME, {
-        variables: { username: authData?.userName ? authData?.userName : '' }
+        variables: { username: route?.params.username! },
+        onCompleted(data) {
+            console.log(data)
+        },
+    })
+
+    const { data: connectsData, error: connectsError, loading: connectsLoading } = useQuery(gql`
+    query findUserPosts($username: String!) {
+        findUserPosts(username: $username) {
+          id
+          text
+          picture
+          createdAt
+          likes
+          timestamp
+          owner {
+            name
+            username
+            biography
+            city
+            }
+        }
+    }
+    `, {
+        variables: {
+            username: route?.params.username
+        },
+
+        onCompleted(data) {
+            console.log(data)
+        },
     })
 
     return (
@@ -41,34 +71,33 @@ const Profile: React.FC<propsProfile> = ({ route }) => {
             <ContainerHeader>
                 <ContainerButtons>
                     <ButtonBack />
-                    {data?.findUserByUsername.username == route?.params.userName ? <ButtonSettings navigationScreen={"Settings"} /> : <></>}
+                    {authData?.userName == route?.params.username ? <ButtonSettings navigationScreen={"Settings"} /> : <></>}
                 </ContainerButtons>
                 <ContainerProfile>
                     <ContainerProfileHeader>
                         <ContentProfileHeader>
-                            <ProfileImg source={data?.findUserByUsername.picture == undefined ? { uri: data?.findUserByUsername.picture } : ImagemProfileNull} />
+                            <ProfileImg source={userData?.findUserByUsername.picture != "undefined" ? { uri: userData?.findUserByUsername.picture } : ImagemProfileNull} />
                             <ContainerProfileName>
-                                <ProfileName>{data?.findUserByUsername.name}</ProfileName>
-                                <ProfileUser>@{data?.findUserByUsername.username}</ProfileUser>
+                                <ProfileName>{userData?.findUserByUsername.name}</ProfileName>
+                                <ProfileUser>@{userData?.findUserByUsername.username}</ProfileUser>
                             </ContainerProfileName>
                         </ContentProfileHeader>
-                        {route?.params.userName != authData?.userName ? <ButtonFollow userFollow="filipe2493" /> : <></>}
-
+                        {route?.params.username != authData?.userName ? <ButtonFollow userFollow={userData?.findUserByUsername.username!} /> : <></>}
                     </ContainerProfileHeader>
-                    <ProfileBio>{data?.findUserByUsername.biography}</ProfileBio>
+                    <ProfileBio>{userData?.findUserByUsername.biography}</ProfileBio>
                     <ContainerProfileFooter>
                         <ContainerAwesomeIcon>
                             <FontAwesomeIcon icon={faLocationDot} size={RFValue(12)} />
-                            <ProfileCity>{data?.findUserByUsername.city}</ProfileCity>
+                            <ProfileCity>{userData?.findUserByUsername.city}</ProfileCity>
                         </ContainerAwesomeIcon>
                         <ContainerAwesomeIcon>
                             <FontAwesomeIcon icon={faCakeCandles} size={RFValue(12)} />
-                            <ProfileBithday>{timestampToDate(data?.findUserByUsername.birthday)}</ProfileBithday>
+                            <ProfileBithday>{timestampToDate(userData?.findUserByUsername.birthday)}</ProfileBithday>
                         </ContainerAwesomeIcon>
                     </ContainerProfileFooter>
+                    <ConnectList connects={connectsData?.findUserPosts} />
                 </ContainerProfile>
             </ContainerHeader>
-            <CommentList />
         </Container>
     )
 }

@@ -17,22 +17,32 @@ export type Profile = {
 }
 
 export type Connect = {
-    id: number
-    name: string
-    userName: string
-    connectText: string
-    date: string
-    connectImage: string | null
-    liked: number
-    profileImage: string
-    comment: number
+    __typename: string,
+    id: string,
+    text: string,
+    picture: string | undefined,
+    createdAt: number,
+    likes: number,
+
+    owner: {
+        __typename: string,
+        biography: string,
+        city: string,
+        name: string,
+        username: string,
+        picture: string | undefined
+    },
 }
 
 export type ConnectComment = {
-    id: number
-    name: string
-    userName: string
-    connectText: string
-    date: string
-    profileImage: string
+    text: string,
+    createdAt: number,
+    owner: {
+        __typename: string,
+        biography: string,
+        city: string,
+        name: string,
+        username: string,
+        picture: string | undefined
+    },
 }

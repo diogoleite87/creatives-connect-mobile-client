@@ -13,7 +13,7 @@ const ButtonProfile: React.FC = () => {
     const { authData } = useAuth()
 
     return (
-        <Container onPress={() => navigation.navigate('Profile' as never, { userName: authData?.userName ? authData?.userName : '' } as never)}>
+        <Container onPress={() => navigation.navigate('Profile', { username: authData?.userName! })}>
             <FontAwesomeIcon icon={faUser} size={RFValue(20)} />
             <Title>Perfil</Title>
         </Container>

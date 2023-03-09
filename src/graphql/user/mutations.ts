@@ -22,8 +22,8 @@ export const DELETE_USER = gql`
 `
 
 export const UPDATE_USER = gql`
-  mutation updateUser($username: String!, $updatedUser: CreateUserInput!) {
-    updateUser(username: $username, updatedUser: $updateUser) {
+  mutation updatedUser($username: String!, $updatedUser: CreateUserInput!) {
+    updateUser(username: $username, updatedUser: $updatedUser) {
       username
       name
       city

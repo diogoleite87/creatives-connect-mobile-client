@@ -43,6 +43,25 @@ const ButtonFollow: React.FC<propsButtonFollow> = ({ userFollow }) => {
         })
     }
 
+    useEffect(() => {
+        verifyFollowing()
+    }, [userFollow])
+
+    const [verifyFollowing, { data, error, loading }] = useLazyQuery(gql`
+    query isUserFollowing($sourceUsername: String!, $skinUsername: String!) {
+        isUserFollowing(sourceUsername: $sourceUsername, skinUsername: $skinUsername) {
+            isUserFollowing
+        }
+      } 
+    `,
+        {
+            variables: { sourceUsername: authData?.userName, skinUsername: userFollow },
+            onCompleted(data) {
+                console.log(data)
+                setIsFollowing(data.isUserFollowing)
+            },
+        })
+
     const [followUser, { loading: followUserLoading, error: followUserError }] = useMutation(gql`
     mutation followUser($sourceUsername: String!, $sinkUsername: String!) {
         followUser(sourceUsername: $sourceUsername, sinkUsername: $sinkUsername)

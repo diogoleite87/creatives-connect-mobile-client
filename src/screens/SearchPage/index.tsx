@@ -3,28 +3,34 @@ import { ButtonBack } from "../../components/ButtonBack"
 import { Container, ContainerProfile, ContainerProfileName, ContentBody, ContentFooter, ContentHeader, Name, Profile, ProfileImage, UserName } from "./styles"
 import { Input } from "../../components/Input"
 import { ButtonConnect } from "../../components/ButtonConnect"
-import { Profile as ProfileModel } from "../../schemas/Models"
 import { useNavigation } from "@react-navigation/native"
 import { ButtonFollow } from "../../components/ButtonFollow"
+import { useLazyQuery, useQuery } from "@apollo/client"
+import { FindUserByUsernameQuery, FindUserByUsernameQueryVariables } from "../../generated/api-types"
+import { FIND_USER_BY_USERNAME } from "../../graphql/user/queries"
+import ImagemProfileNull from '../../../assets/imageProfileNull.png'
+import { useAuth } from "../../hooks/useAuth"
 
 const SearchPage: React.FC = () => {
 
     const navigation = useNavigation()
 
     const [userSearch, setUserSearch] = useState<string>('')
-    const [profileSearch, setProfileSearch] = useState<ProfileModel>({
-        profileImage: 'https://avatars.githubusercontent.com/u/62341955?v=4',
-        name: 'Diogo Leite',
-        userName: 'diogoleite87',
-        bio: 'O valor das coisas não está no tempo que elas duram, mas na intensidade com que acontecem. Por isso existem momentos inesquecíveis, coisas inexplicáveis e pessoas incomparáveis.',
-        birthday: '19 de Abril',
-        city: 'João Monlevade, Mg'
-    } as ProfileModel)
-    const [isFound, setIsFound] = useState<boolean>(true)
+    const [isFound, setIsFound] = useState<boolean>(false)
 
-    useEffect(() => {
-        console.log(userSearch)
-    }, [userSearch])
+    const { authData } = useAuth()
+
+    const [searchUser, { data, error, loading }] = useLazyQuery<
+        FindUserByUsernameQuery,
+        FindUserByUsernameQueryVariables
+    >(FIND_USER_BY_USERNAME, {
+        variables: { username: userSearch },
+        onCompleted(data) {
+            setIsFound(true)
+        }, onError(error) {
+            setIsFound(false)
+        },
+    })
 
     return (
         <Container>
@@ -33,22 +39,24 @@ const SearchPage: React.FC = () => {
                 <Input
                     placeholder='Nome de Usuário'
                     onChangeText={(text: string) => setUserSearch(text)}
+                    returnKeyType="done"
+                    onSubmitEditing={async () => await searchUser()}
                 />
 
                 {isFound ?
                     <ContainerProfile>
-                        <Profile onPress={() => navigation.navigate('Profile' as never)}>
-                            <ProfileImage source={{ uri: profileSearch.profileImage }} />
+                        <Profile onPress={() => navigation.navigate('Profile', { username: userSearch })}>
+                            <ProfileImage source={data?.findUserByUsername.picture == undefined ? { uri: data?.findUserByUsername.picture } : ImagemProfileNull} />
                             <ContainerProfileName>
                                 <Name>
-                                    {profileSearch.name}
+                                    {data?.findUserByUsername.name}
                                 </Name>
                                 <UserName>
-                                    @{profileSearch.userName}
+                                    @{data?.findUserByUsername.username}
                                 </UserName>
                             </ContainerProfileName>
                         </Profile>
-                        <ButtonFollow userFollow="filipe2493" />
+                        {data?.findUserByUsername.username != authData?.userName ? <ButtonFollow userFollow={data?.findUserByUsername.username!} /> : <></>}
                     </ContainerProfile>
                     : <></>}
 

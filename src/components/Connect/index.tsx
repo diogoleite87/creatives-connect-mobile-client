@@ -8,6 +8,8 @@ import { ConnectImage, ConnectText, Container, ContainerProfileFooter, Container
 import { ContainerAwesomeIcon } from "../../screens/Profile/styles";
 import { useNavigation } from "@react-navigation/native";
 import { Connect as ConnectType } from "../../schemas/Models";
+import { timestampToDate } from "../../utils/timestampToDate";
+import ImageProfileNull from '../../../assets/imageProfileNull.png'
 
 interface connectProps {
     connectItem: ConnectType
@@ -20,29 +22,29 @@ const Connect: React.FC<connectProps> = ({ connectItem }) => {
 
     const navigate = () => {
         console.log(connectItem)
-        navigation.navigate('ConnectPage' as never, connectItem as never);
+        navigation.navigate('ConnectPage', { connect: connectItem });
     }
 
     return (
         <Container onPress={navigate}>
             <ContainerProfileHeader>
-                <ProfileImg source={{ uri: connectItem.profileImage }} />
+                <ProfileImg source={connectItem.owner.picture ? { uri: connectItem.owner.picture } : ImageProfileNull} />
                 <ContainerProfileName>
-                    <ProfileName>{connectItem.name}</ProfileName>
-                    <ProfileUser>@{connectItem.userName}</ProfileUser>
+                    <ProfileName>{connectItem.owner.name}</ProfileName>
+                    <ProfileUser>@{connectItem.owner.username}</ProfileUser>
                 </ContainerProfileName>
             </ContainerProfileHeader>
-            <ConnectText>{connectItem.connectText}</ConnectText>
-            {connectItem.connectImage ? <ConnectImage source={{ uri: connectItem.connectImage }} /> : <></>}
-            <TextDate>{connectItem.date}</TextDate>
+            <ConnectText>{connectItem.text}</ConnectText>
+            {connectItem.picture != "undefined" ? <ConnectImage source={{ uri: connectItem.picture }} /> : <></>}
+            <TextDate>{timestampToDate(connectItem.createdAt)}</TextDate>
             <ContainerProfileFooter>
                 <ContainerAwesomeIcon>
                     <FontAwesomeIcon icon={faComment} size={RFValue(18)} />
-                    <TextFooter>{connectItem.comment} comentários</TextFooter>
+                    <TextFooter>{0} comentários</TextFooter>
                 </ContainerAwesomeIcon>
                 <ContainerAwesomeIcon>
                     <FontAwesomeIcon icon={faHeart} size={RFValue(18)} color="black" />
-                    <TextFooter>{connectItem.liked} curtidas</TextFooter>
+                    <TextFooter>{connectItem.likes} curtidas</TextFooter>
                 </ContainerAwesomeIcon>
             </ContainerProfileFooter>
         </Container>

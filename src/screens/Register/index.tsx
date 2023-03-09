@@ -23,40 +23,44 @@ import { ButtonBack } from "../../components/ButtonBack";
 import { InputImage } from "../../components/InputImage";
 
 import ImagemProfileNull from '../../../assets/imageProfileNull.png'
+import { gql, useMutation } from "@apollo/client";
+import { CreateUserInput, MutationCreateUserArgs } from "../../generated/api-types";
+import { CREATE_USER } from "../../graphql/user/mutations";
+import { UserName } from "../SearchPage/styles";
 
 
 const Register: React.FC = () => {
 
     const navigation = useNavigation();
 
-    const emailRef = useRef<any>()
     const passwordRef = useRef<any>()
-    const confirmPasswordRef = useRef<any>()
     const userRef = useRef<any>()
+    const cityRef = useRef<any>()
 
     const [name, setName] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [userName, setUserName] = useState<string>('');
-    const [confirmPassword, setConfirmPassword] = useState<string>('');
-    const [image, setImage] = useState<string>()
+    const [city, setCity] = useState<string>('')
+    const [image, setImage] = useState<string>('')
     const [error, setError] = useState<boolean>(false)
     const [success, setSuccess] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-
-    const createUser = async () => {
-
-        setError(false)
-
-        if (password == confirmPassword) {
-
-
-        } else {
-            setErrorMessage('Senhas não correspondentes')
-            setError(true)
+    const [createUser, { data: createUserData, error: createUserError, loading: createUserLoading }] = useMutation(gql`
+    mutation createUser($userInput: CreateUserInput!) {
+        createUser(userInput: $userInput) {
+          username
         }
-    }
+      },
+    `, {
+        onCompleted(data, clientOptions) {
+            navigation.navigate('Login' as never)
+        },
+        variables: { userInput: { username: userName, password: password, name: name, city: city, birthday: 1019222478 } },
+        onError(error, clientOptions) {
+            console.log(error)
+        },
+    });
 
     return (
         <Container showsVerticalScrollIndicator={false}>
@@ -85,15 +89,7 @@ const Register: React.FC = () => {
                     keyboardType='default'
                     onChangeText={(text: string) => setName(text)}
                     returnKeyType="next"
-                    onSubmitEditing={() => emailRef.current.focus()}
-                />
-                <Input
-                    inputRef={emailRef}
-                    placeholder='Email'
-                    keyboardType='email-address'
-                    onChangeText={(text: string) => setEmail(text)}
-                    returnKeyType="next"
-                    onSubmitEditing={() => passwordRef.current.focus()}
+                    onSubmitEditing={() => userRef.current.focus()}
                 />
                 <Input
                     inputRef={userRef}
@@ -101,7 +97,15 @@ const Register: React.FC = () => {
                     keyboardType='default'
                     onChangeText={(text: string) => setUserName(text)}
                     returnKeyType="next"
-                    onSubmitEditing={createUser}
+                    onSubmitEditing={() => cityRef.current.focus()}
+                />
+                <Input
+                    inputRef={cityRef}
+                    placeholder='Cidade'
+                    keyboardType='default'
+                    onChangeText={(text: string) => setCity(text)}
+                    returnKeyType="next"
+                    onSubmitEditing={() => passwordRef.current.focus()}
                 />
                 <Input
                     inputRef={passwordRef}
@@ -109,15 +113,6 @@ const Register: React.FC = () => {
                     secureTextEntry
                     onChangeText={(text: string) => setPassword(text)}
                     returnKeyType="next"
-                    onSubmitEditing={() => confirmPasswordRef.current.focus()}
-                />
-                <Input
-                    inputRef={confirmPasswordRef}
-                    placeholder='Repita sua Senha'
-                    secureTextEntry
-                    onChangeText={(text: string) => setConfirmPassword(text)}
-                    returnKeyType="done"
-                    onSubmitEditing={createUser}
                 />
 
             </Content>
@@ -129,7 +124,7 @@ const Register: React.FC = () => {
                 </RegisterView>
 
 
-                <Button onPress={createUser}>
+                <Button onPress={() => createUser}>
                     <TextButton>Cadastrar</TextButton>
                 </Button>
             </View>
