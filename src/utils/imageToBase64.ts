@@ -1,4 +1,4 @@
-async function imageToBase64(imageUri: string): Promise<string> {
+export async function imageToBase64(imageUri: string): Promise<string> {
     const response = await fetch(imageUri);
     const blob = await response.blob();
     return new Promise((resolve, reject) => {
