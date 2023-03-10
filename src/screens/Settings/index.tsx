@@ -56,10 +56,11 @@ const Settings: React.FC = () => {
       setNameUpdate(data.findUserByUsername.name)
       setCityUpdate(data.findUserByUsername.city)
       setbiographyUpdate(data.findUserByUsername.biography)
+      setProfileImage(data.findUserByUsername.picture)
     }
   })
 
-  const [updateUser, {}] = useMutation(UPDATE_USER, {
+  const [updateUser, { }] = useMutation(UPDATE_USER, {
     onCompleted() {
       signOut()
     }
@@ -70,7 +71,6 @@ const Settings: React.FC = () => {
 
     if (profileImage) {
       base64 = await imageToBase64(profileImage)
-      console.log(base64)
     }
 
     updateUser({
@@ -96,9 +96,7 @@ const Settings: React.FC = () => {
         <ContainerImg>
           <ProfileImg
             source={
-              data?.findUserByUsername.picture == undefined
-                ? { uri: data?.findUserByUsername.picture }
-                : ImagemProfileNull
+              profileImage ? { uri: profileImage } : ImagemProfileNull
             }
           />
           <InputImage setImage={setProfileImage} />
@@ -114,7 +112,7 @@ const Settings: React.FC = () => {
         <Input
           placeholder="Biografia"
           keyboardType="default"
-          value={biographyUpdate !== "undefined" ? biographyUpdate : ""}
+          value={biographyUpdate ? biographyUpdate : ""}
           onChangeText={(text: string) => setbiographyUpdate(text)}
         />
         <Input
@@ -122,12 +120,6 @@ const Settings: React.FC = () => {
           keyboardType="default"
           value={cityUpdate}
           onChangeText={(text: string) => setCityUpdate(text)}
-        />
-        <Input
-          placeholder="Senha"
-          secureTextEntry
-          value={password}
-          onChangeText={(text: string) => setPassword(text)}
         />
       </ContentBody>
       <ContentFooter>

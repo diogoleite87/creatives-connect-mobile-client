@@ -1,8 +1,9 @@
-import React from "react"
+import React, { useState } from "react"
 
 import { gql, useQuery } from "@apollo/client"
 import { faComment } from "@fortawesome/free-regular-svg-icons/faComment"
 import { faHeart } from "@fortawesome/free-regular-svg-icons/faHeart"
+import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons/faHeart"
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
 import { useNavigation } from "@react-navigation/native"
 import { RFValue } from "react-native-responsive-fontsize"
@@ -23,6 +24,7 @@ import {
   TextDate,
   TextFooter
 } from "./styles"
+import { useAuth } from "../../hooks/useAuth"
 
 const FIND_POST_COMMENTS = gql`
   query findPostComments($postId: String!) {
@@ -43,11 +45,21 @@ interface connectProps {
   connectItem: ConnectType
 }
 
+const USER_LIKED_POST = gql`
+  query userLikedPost($username: String!, $postId: String!){
+    userLikedPost(username: $username, postId: $postId)
+  }
+`
+
 const Connect: React.FC<connectProps> = ({ connectItem }) => {
+
+  const { authData } = useAuth()
   const navigation = useNavigation()
 
+  const [hasLiked, setHasLiked] = useState<boolean>(false)
+  const username = authData?.userName
+
   const navigate = () => {
-    console.log(connectItem)
     navigation.navigate("ConnectPage", { connect: connectItem })
   }
 
@@ -55,13 +67,21 @@ const Connect: React.FC<connectProps> = ({ connectItem }) => {
     variables: { postId: connectItem.id }
   })
 
+  const { } = useQuery(USER_LIKED_POST, {
+    variables: { username: username, postId: connectItem.id },
+    onCompleted(data) {
+      setHasLiked(data.userLikedPost)
+    },
+  })
+
+
   return (
     <Container onPress={navigate}>
       <>
         <ContainerProfileHeader>
           <ProfileImg
             source={
-              connectItem.owner.picture
+              connectItem.owner.picture != "undefined"
                 ? { uri: connectItem.owner.picture }
                 : ImageProfileNull
             }
@@ -87,7 +107,19 @@ const Connect: React.FC<connectProps> = ({ connectItem }) => {
           </TextFooter>
         </ContainerAwesomeIcon>
         <ContainerAwesomeIcon>
-          <FontAwesomeIcon icon={faHeart} size={RFValue(18)} color="black" />
+          {hasLiked ? (
+            <FontAwesomeIcon
+              icon={faHeartSolid}
+              size={RFValue(18)}
+              color="red"
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={faHeart}
+              size={RFValue(18)}
+              color="black"
+            />
+          )}
           <TextFooter>{connectItem.likes} curtidas</TextFooter>
         </ContainerAwesomeIcon>
       </ContainerProfileFooter>

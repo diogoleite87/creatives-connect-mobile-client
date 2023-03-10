@@ -13,6 +13,7 @@ import {
   ContentHeader,
   TextButton
 } from "./styles"
+import { useNavigation } from "@react-navigation/native"
 
 interface propsNewCommentPage {
   route?: {
@@ -47,6 +48,8 @@ const NewCommentPage: React.FC<propsNewCommentPage> = ({ route }) => {
   const [comment, setComment] = useState<string>("")
   const { authData } = useAuth()
 
+  const navigate = useNavigation()
+
   const submit = async () => {
     await submitComment({
       variables: {
@@ -57,10 +60,9 @@ const NewCommentPage: React.FC<propsNewCommentPage> = ({ route }) => {
     })
   }
 
-  const [submitComment, {}] = useMutation(MAKE_COMMENT, {
+  const [submitComment, { }] = useMutation(MAKE_COMMENT, {
     onCompleted(data) {
-      console.log("teste", data)
-      // redirecionar para fora da tela
+      navigate.navigate('Home' as never)
     }
   })
   return (

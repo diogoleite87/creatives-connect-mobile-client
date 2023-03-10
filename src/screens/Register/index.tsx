@@ -50,22 +50,9 @@ const Register: React.FC = () => {
   const [success, setSuccess] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  const [createUser, {}] = useMutation(CREATE_USER, {
+  const [createUser, { }] = useMutation(CREATE_USER, {
     onCompleted() {
       navigation.navigate("Login" as never)
-    },
-    variables: {
-      userInput: {
-        username: userName,
-        password: password,
-        name: name,
-        city: city,
-        birthday: 1019222478
-      }
-    },
-    onError(error, clientOptions) {
-      console.log(error)
-      console.log(clientOptions)
     }
   })
 
@@ -77,7 +64,8 @@ const Register: React.FC = () => {
           password: password,
           name: name,
           city: city,
-          birthday: Date.now()
+          birthday: Date.now(),
+          biography: ''
         }
       }
     })

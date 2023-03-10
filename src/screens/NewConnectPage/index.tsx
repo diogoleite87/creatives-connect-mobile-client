@@ -24,8 +24,6 @@ const NewConnectPage: React.FC = () => {
 
         let imageBase64 = image ? await imageToBase64(image) : 'undefined'
 
-        console.log({ picture: imageBase64 })
-
         await submitConnect({
             variables: { username: authData?.userName!, postInput: { picture: imageBase64, text: connect } as CreatePostInput }
         })

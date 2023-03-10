@@ -1,26 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { ButtonText, ContainerFollow, ContainerUnfollow } from "./styles";
-import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import { FOLLOW_USER } from "../../graphql/user/mutations";
-import { MutationFollowUserVariables, MutationFollowUser } from "../../generated/api-types";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useAuth } from "../../hooks/useAuth";
 
 interface propsButtonFollow {
     userFollow: string
 }
 
+const IS_USER_FOLLOWING = gql`
+query isUserFollowing($sourceUsername: String!, $sinkUsername: String!) {
+    isUserFollowing(sourceUsername: $sourceUsername, sinkUsername: $sinkUsername)
+  } 
+`
+
 const ButtonFollow: React.FC<propsButtonFollow> = ({ userFollow }) => {
 
     const [isFollowing, setIsFollowing] = useState<boolean>(false)
     const { authData } = useAuth()
+
+    const sourceUsername = authData?.userName
+    const sinkUsername = userFollow
 
     const submit = () => {
         isFollowing ? unFollow() : follow()
     }
 
     const follow = async () => {
-        console.log('seguindo')
         await followUser({
             variables: {
                 sourceUsername: authData?.userName!,
@@ -32,7 +38,6 @@ const ButtonFollow: React.FC<propsButtonFollow> = ({ userFollow }) => {
     }
 
     const unFollow = async () => {
-        console.log('deixando de seguir')
         await unfollowUser({
             variables: {
                 sourceUsername: authData?.userName!,
@@ -43,21 +48,10 @@ const ButtonFollow: React.FC<propsButtonFollow> = ({ userFollow }) => {
         })
     }
 
-    useEffect(() => {
-        verifyFollowing()
-    }, [userFollow])
-
-    const [verifyFollowing, { data, error, loading }] = useLazyQuery(gql`
-    query isUserFollowing($sourceUsername: String!, $skinUsername: String!) {
-        isUserFollowing(sourceUsername: $sourceUsername, skinUsername: $skinUsername) {
-            isUserFollowing
-        }
-      } 
-    `,
+    const { data, loading } = useQuery(IS_USER_FOLLOWING,
         {
-            variables: { sourceUsername: authData?.userName, skinUsername: userFollow },
+            variables: { sourceUsername: sourceUsername, sinkUsername: sinkUsername },
             onCompleted(data) {
-                console.log(data)
                 setIsFollowing(data.isUserFollowing)
             },
         })
@@ -75,12 +69,13 @@ const ButtonFollow: React.FC<propsButtonFollow> = ({ userFollow }) => {
     `);
 
     return (
-        isFollowing ? <ContainerUnfollow onPress={unFollow}>
-            <ButtonText>Seguindo</ButtonText>
-        </ContainerUnfollow> :
-            <ContainerFollow onPress={submit}>
-                <ButtonText>Seguir</ButtonText>
-            </ContainerFollow>
+        !loading ?
+            isFollowing ? <ContainerUnfollow onPress={unFollow}>
+                <ButtonText>Seguindo</ButtonText>
+            </ContainerUnfollow> :
+                <ContainerFollow onPress={submit}>
+                    <ButtonText>Seguir</ButtonText>
+                </ContainerFollow> : <></>
     )
 }
 

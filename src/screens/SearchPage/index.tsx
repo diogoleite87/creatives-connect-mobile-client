@@ -46,7 +46,7 @@ const SearchPage: React.FC = () => {
                 {isFound ?
                     <ContainerProfile>
                         <Profile onPress={() => navigation.navigate('Profile', { username: userSearch })}>
-                            <ProfileImage source={data?.findUserByUsername.picture == undefined ? { uri: data?.findUserByUsername.picture } : ImagemProfileNull} />
+                            <ProfileImage source={data?.findUserByUsername.picture != "undefined" ? { uri: data?.findUserByUsername.picture } : ImagemProfileNull} />
                             <ContainerProfileName>
                                 <Name>
                                     {data?.findUserByUsername.name}

@@ -41,13 +41,7 @@ const Home: React.FC = () => {
   const navigation = useNavigation()
 
   const { data } = useQuery(GET_USER_TIMELINE, {
-    variables: { username: authData?.userName! },
-    onCompleted(data) {
-      console.log(data)
-    },
-    onError(error) {
-      console.log(error.message)
-    }
+    variables: { username: authData?.userName! }
   })
 
   return (
