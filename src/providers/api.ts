@@ -2,17 +2,24 @@ import { ApolloClient, InMemoryCache } from "@apollo/client"
 import { setContext } from "@apollo/client/link/context"
 import { createHttpLink } from "@apollo/client/link/http/createHttpLink"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { AuthData } from "../schemas/Models"
 
 const httpLink = createHttpLink({
-  uri: `http://${process.env.BASE_URL}:3000/graphql`
+  uri: `http://192.168.2.8:3000/graphql`
 })
 
 const authLink = setContext(async (_, { headers }) => {
-  const token = await AsyncStorage.getItem("@AuthData")
+  let authData: AuthData = {} as AuthData
+  const res = await AsyncStorage.getItem("@AuthData")
+
+  if (res) {
+    authData = JSON.parse(res)
+  }
+
   return {
     headers: {
       ...headers,
-      Authorization: token ? `Bearer ${token}` : ""
+      Authorization: authData.token ? `Bearer ${authData.token}` : ""
     }
   }
 })
