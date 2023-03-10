@@ -1,69 +1,80 @@
-import React, { useEffect, useState } from 'react'
-import { Connect as ConnectType, Profile } from '../../schemas/Models'
-import { Container, ContainerButtonConnect, ContainerButtonSearch, ContentBody, ContentFooter, ContentHeader, SubTitle, Title } from './styles';
-import { ButtonProfile } from '../../components/ButtonProfile';
-import { ButtonConnect } from '../../components/ButtonConnect';
-import { ConnectList } from '../../components/ConnectList';
-import { useNavigation } from '@react-navigation/native';
-import { faPen } from '@fortawesome/free-solid-svg-icons/faPen'
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { RFValue } from 'react-native-responsive-fontsize';
-import { FindUserByUsernameQuery, GetUserTimelineQueryVariables, QueryGetUserTimelineArgs } from '../../generated/api-types';
-import { gql, useQuery } from '@apollo/client';
-import { useAuth } from '../../hooks/useAuth';
+import { gql, useQuery } from "@apollo/client"
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons/faMagnifyingGlass"
+import { faPen } from "@fortawesome/free-solid-svg-icons/faPen"
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
+import { useNavigation } from "@react-navigation/native"
+import React from "react"
+import { RFValue } from "react-native-responsive-fontsize"
+import { ButtonConnect } from "../../components/ButtonConnect"
+import { ButtonProfile } from "../../components/ButtonProfile"
+import { ConnectList } from "../../components/ConnectList"
+import { useAuth } from "../../hooks/useAuth"
+import {
+  Container,
+  ContainerButtonConnect,
+  ContainerButtonSearch,
+  ContentBody,
+  ContentHeader
+} from "./styles"
 
+const GET_USER_TIMELINE = gql`
+  query getUserTimeline($username: String!) {
+    getUserTimeline(username: $username) {
+      id
+      text
+      picture
+      createdAt
+      likes
+      owner {
+        name
+        username
+        picture
+        city
+      }
+    }
+  }
+`
 
 const Home: React.FC = () => {
+  const { authData } = useAuth()
 
-    const [user, setUser] = useState<FindUserByUsernameQuery>({} as FindUserByUsernameQuery)
+  const navigation = useNavigation()
 
-    const { authData } = useAuth()
-
-    const navigation = useNavigation()
-
-    const { data, error, loading } = useQuery(gql`
-    query getUserTimeline($username: String!) {
-        getUserTimeline(username: $username) {
-          id
-          text
-          picture
-          createdAt
-          likes
-          timestamp
-          owner {
-            name
-            username
-            biography
-            city
-            }
-        }
+  const { data } = useQuery(GET_USER_TIMELINE, {
+    variables: { username: authData?.userName! },
+    onCompleted(data) {
+      console.log(data)
+    },
+    onError(error) {
+      console.log(error.message)
     }
-    `, {
-        variables: { username: authData?.userName! },
-        onCompleted(data) {
-            console.log(data.getUserTimeline)
-        },
-    })
+  })
 
-    return (
-        <Container>
-            <ContentHeader>
-                <ButtonConnect />
-                <ButtonProfile />
-            </ContentHeader>
-            <ContentBody>
-                <ConnectList connects={data?.getUserTimeline} />
-            </ContentBody>
-            <ContainerButtonSearch onPress={() => navigation.navigate('SearchPage' as never)}>
-                <FontAwesomeIcon icon={faMagnifyingGlass} size={RFValue(25)} color='white' />
-            </ContainerButtonSearch>
-            <ContainerButtonConnect onPress={() => navigation.navigate('NewConnectPage' as never)}>
-                <FontAwesomeIcon icon={faPen} size={RFValue(25)} color='white' />
-            </ContainerButtonConnect>
-        </Container >
-    )
-
+  return (
+    <Container>
+      <ContentHeader>
+        <ButtonConnect />
+        <ButtonProfile />
+      </ContentHeader>
+      <ContentBody>
+        {data && <ConnectList connects={data.getUserTimeline} />}
+      </ContentBody>
+      <ContainerButtonSearch
+        onPress={() => navigation.navigate("SearchPage" as never)}
+      >
+        <FontAwesomeIcon
+          icon={faMagnifyingGlass}
+          size={RFValue(25)}
+          color="white"
+        />
+      </ContainerButtonSearch>
+      <ContainerButtonConnect
+        onPress={() => navigation.navigate("NewConnectPage" as never)}
+      >
+        <FontAwesomeIcon icon={faPen} size={RFValue(25)} color="white" />
+      </ContainerButtonConnect>
+    </Container>
+  )
 }
 
 export { Home }

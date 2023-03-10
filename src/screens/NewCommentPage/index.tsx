@@ -1,82 +1,87 @@
+import { gql, useMutation } from "@apollo/client"
 import { useState } from "react"
 import { ButtonBack } from "../../components/ButtonBack"
-import { ButtonEditSubmit, Container, ContentBody, ContentFooter, ContentHeader, TextButton } from "./styles"
-import { Input } from "../../components/Input"
 import { ButtonConnect } from "../../components/ButtonConnect"
-import { Connect } from "../../schemas/Models"
-import { gql, useMutation } from "@apollo/client"
+import { Input } from "../../components/Input"
 import { useAuth } from "../../hooks/useAuth"
+import { Connect } from "../../schemas/Models"
+import {
+  ButtonEditSubmit,
+  Container,
+  ContentBody,
+  ContentFooter,
+  ContentHeader,
+  TextButton
+} from "./styles"
 
 interface propsNewCommentPage {
-    route?: {
-        params: {
-            connect: {
-                connect: Connect
-            }
-        }
+  route?: {
+    params: {
+      connect: {
+        connect: Connect
+      }
     }
+  }
 }
 
-const NewCommentPage: React.FC<propsNewCommentPage> = ({ route }) => {
-
-    const [comment, setComment] = useState<string>('')
-    const { authData } = useAuth()
-
-    const submit = async () => {
-        console.log({
-            variables: {
-                username: authData?.userName!,
-                postId: route?.params.connect.connect.id!,
-                commentInput: { text: comment }
-            }
-        })
-        await submitComment({
-            variables: {
-                username: authData?.userName!,
-                postId: route?.params.connect.connect.id!,
-                commentInput: { text: comment }
-            }
-        })
+const MAKE_COMMENT = gql`
+  mutation comment(
+    $username: String!
+    $postId: String!
+    $commentInput: CommentInput!
+  ) {
+    comment(username: $username, postId: $postId, commentInput: $commentInput) {
+      id
+      text
+      created_at
+      owner {
+        name
+        username
+        picture
+      }
     }
+  }
+`
 
-    const [submitComment, { data, error, loading }] = useMutation(gql`
-        mutation comment(
-            $username: String!
-            $postId: String!
-            $commentInput: CommentInput!
-        ) {
-            comment(username: $username, postId: $postId, commentInput: $commentInput) {
-             id
-             text
-             createdAt
-            }
-        }
-    `, {
-        onCompleted(data, clientOptions) {
-            console.log("teste", data)
-        },
+const NewCommentPage: React.FC<propsNewCommentPage> = ({ route }) => {
+  const [comment, setComment] = useState<string>("")
+  const { authData } = useAuth()
+
+  const submit = async () => {
+    await submitComment({
+      variables: {
+        username: authData?.userName!,
+        postId: route?.params.connect.connect.id!,
+        commentInput: { text: comment }
+      }
     })
-    return (
-        <Container>
-            <ContentHeader>
-                <ButtonBack />
-            </ContentHeader>
-            <ContentBody>
-                <Input
-                    placeholder='Comentário'
-                    onChangeText={(text: string) => setComment(text)}
-                />
-                <ButtonEditSubmit onPress={submit}>
-                    <TextButton>
-                        Comentar
-                    </TextButton>
-                </ButtonEditSubmit>
-            </ContentBody>
-            <ContentFooter>
-                <ButtonConnect />
-            </ContentFooter>
-        </Container>
-    )
+  }
+
+  const [submitComment, {}] = useMutation(MAKE_COMMENT, {
+    onCompleted(data) {
+      console.log("teste", data)
+      // redirecionar para fora da tela
+    }
+  })
+  return (
+    <Container>
+      <ContentHeader>
+        <ButtonBack />
+      </ContentHeader>
+      <ContentBody>
+        <Input
+          placeholder="Comentário"
+          onChangeText={(text: string) => setComment(text)}
+        />
+        <ButtonEditSubmit onPress={submit}>
+          <TextButton>Comentar</TextButton>
+        </ButtonEditSubmit>
+      </ContentBody>
+      <ContentFooter>
+        <ButtonConnect />
+      </ContentFooter>
+    </Container>
+  )
 }
 
 export { NewCommentPage }

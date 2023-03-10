@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { AuthData } from "../schemas/Models"
 
 const httpLink = createHttpLink({
-  uri: `http://192.168.2.8:3000/graphql`
+  uri: `http://192.168.2.15:3000/graphql`
 })
 
 const authLink = setContext(async (_, { headers }) => {
@@ -28,5 +28,13 @@ const link = authLink.concat(httpLink)
 
 export const client = new ApolloClient({
   link: link,
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: "no-cache"
+    },
+    query: {
+      fetchPolicy: "no-cache"
+    }
+  }
 })
