@@ -34,15 +34,13 @@ const Login: React.FC = () => {
   const [userName, setUsername] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [errorLogin, setErrorLogin] = useState<boolean>(false)
-  const [token, setToken] = useState<string | null>(null)
 
   const [getToken, { data: tokenData, error: tokenError, loading: tokenLoading }] = useMutation<
     LoginMutation,
     LoginMutationVariables
   >(LOGIN, {
     onCompleted(data, clientOptions) {
-      setToken(data.login.token ? data.login.token : null)
-      signIn({ userName, token })
+      signIn({ userName, token: data.login.token ? data.login.token : null })
     }, onError(error, clientOptions) {
       setErrorLogin(true)
     },
@@ -80,6 +78,7 @@ const Login: React.FC = () => {
           secureTextEntry
           onChangeText={(text: string) => setPassword(text)}
           returnKeyType="done"
+          onSubmitEditing={submit}
         />
       </ContentBody>
 
