@@ -1,17 +1,22 @@
 import React from "react";
-import { ContainerList, Title } from "./styles";
+import { ButtonRefresh, ContainerList, TextButton, Title } from "./styles";
 import { Connect } from "../Connect";
 import { Connect as ConnectType } from "../../schemas/Models";
 
 interface connectProps {
     connects?: ConnectType[]
+    refresh?: () => void
 }
 
-const ConnectList: React.FC<connectProps> = ({ connects }) => {
+const ConnectList: React.FC<connectProps> = ({ connects, refresh }) => {
 
     return (
         <ContainerList
-            ListHeaderComponent={<Title>Connects:</Title>}
+            ListHeaderComponent={
+                <ButtonRefresh onPress={refresh}>
+                    <TextButton>Recarregar</TextButton>
+                </ButtonRefresh>
+            }
             data={connects}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) =>

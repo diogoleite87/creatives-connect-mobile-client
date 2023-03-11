@@ -14,8 +14,6 @@ const Comment: React.FC<propsComment> = ({ connectComment }) => {
 
     const navigation = useNavigation();
 
-    console.log(connectComment)
-
     return (
         <Container>
             <ContainerProfileHeader onPress={() => navigation.navigate('Profile' as never, { username: connectComment.owner.username! })}>
