@@ -42,6 +42,7 @@ const Login: React.FC = () => {
   >(LOGIN, {
     onCompleted(data, clientOptions) {
       setToken(data.login.token ? data.login.token : null)
+      signIn({ userName, token })
     }, onError(error, clientOptions) {
       setErrorLogin(true)
     },
@@ -49,8 +50,6 @@ const Login: React.FC = () => {
 
   const submit = async () => {
     await getToken({ variables: { username: userName, password } })
-
-    token ? signIn({ userName, token }) : setErrorLogin(true)
   }
 
 
