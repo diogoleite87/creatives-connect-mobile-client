@@ -1,7 +1,6 @@
 import { gql, useQuery } from "@apollo/client"
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons/faMagnifyingGlass"
 import { faPen } from "@fortawesome/free-solid-svg-icons/faPen"
-import { faArrowRotateRight } from "@fortawesome/free-solid-svg-icons/faArrowRotateRight"
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
 import { useNavigation } from "@react-navigation/native"
 import React from "react"

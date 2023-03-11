@@ -75,7 +75,7 @@ const Profile: React.FC<propsProfile> = ({ route }) => {
         variables: { username: profileUser }
     })
 
-    const { data: connectsData, loading: postsLoading } = useQuery(FIND_USER_POSTS, {
+    const { data: connectsData, refetch: connectsRefetch, loading: postsLoading } = useQuery(FIND_USER_POSTS, {
         variables: {
             username: profileUser
         }
@@ -133,7 +133,7 @@ const Profile: React.FC<propsProfile> = ({ route }) => {
                                 </ProfileBithday>
                             </ContainerAwesomeIcon>
                         </ContainerProfileFooter>
-                        <ConnectList connects={connectsData?.findUserPosts} />
+                        <ConnectList connects={connectsData?.findUserPosts} refresh={() => connectsRefetch()} />
                     </ContainerProfile>
                 </ContainerHeader>
             </Container>
