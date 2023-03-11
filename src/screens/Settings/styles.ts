@@ -13,7 +13,6 @@ export const Container = styled.View`
   background-color: ${({ theme }) => theme.COLORS.BACKGROUNDLIGHT};
 `
 export const ContentHeader = styled.View`
-  margin-top: ${RFValue(getStatusBarHeight(true))}px;
   width: 100%;
 `
 export const ContentBody = styled.View`
