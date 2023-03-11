@@ -1,6 +1,7 @@
 import AppLoading from "expo-app-loading"
 import { StatusBar } from "expo-status-bar"
 import { ThemeProvider } from "styled-components/native"
+import { Platform, SafeAreaView } from "react-native"
 
 import {
   Poppins_300Light,
@@ -31,12 +32,14 @@ const AppSetup: React.FC = () => {
   }
 
   return (
-    <ThemeProvider theme={COLORS}>
-      <StatusBar style="dark" translucent backgroundColor="transparent" />
-      <AuthProvider>
-        <Router />
-      </AuthProvider>
-    </ThemeProvider>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ThemeProvider theme={COLORS}>
+        <StatusBar style={Platform.OS === 'ios' ? 'auto' : 'light'} translucent={false} />
+        <AuthProvider>
+          <Router />
+        </AuthProvider>
+      </ThemeProvider>
+    </SafeAreaView>
   )
 }
 

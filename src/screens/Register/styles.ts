@@ -1,7 +1,5 @@
 import styled from "styled-components/native";
 import { RFValue } from "react-native-responsive-fontsize";
-import { getStatusBarHeight } from "react-native-status-bar-height";
-
 
 export const Container = styled.ScrollView`
   width: 100%;
@@ -15,7 +13,6 @@ export const Container = styled.ScrollView`
 `
 
 export const Header = styled.View`
-  margin-top: ${RFValue(getStatusBarHeight(true))}px;
   width: 100%;
 `
 

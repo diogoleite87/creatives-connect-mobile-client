@@ -1,6 +1,5 @@
 import styled from "styled-components/native";
 import { RFValue } from "react-native-responsive-fontsize";
-import { getStatusBarHeight } from "react-native-status-bar-height";
 
 export const Container = styled.View`
   width: 100%;
@@ -13,7 +12,6 @@ export const Container = styled.View`
   background-color: ${({ theme }) => theme.COLORS.BACKGROUNDLIGHT};
 `
 export const ContentHeader = styled.View`
-  margin-top: ${RFValue(getStatusBarHeight(true))}px;
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
@@ -21,12 +19,10 @@ export const ContentHeader = styled.View`
 export const ContentBody = styled.View`
   flex: 1;
   width: 100%;
-  margin-bottom: ${RFValue(20)}px;
   margin-top: ${RFValue(20)}px;
 `
 export const ContentFooter = styled.View`
   width: 100%;
-  margin-bottom: ${RFValue(20)}px;
   flex-direction: column;
   align-items: center;
 `
@@ -44,7 +40,7 @@ export const ContainerButtonConnect = styled.TouchableOpacity`
   padding: 15px;
   border-radius: 100px;
   position: absolute;
-  bottom: 50px;
+  bottom: 20px;
   right: 20px;
 `
 
@@ -53,7 +49,7 @@ export const ContainerButtonSearch = styled.TouchableOpacity`
   padding: 15px;
   border-radius: 100px;
   position: absolute;
-  bottom: 120px;
+  bottom: 90px;
   right: 20px;
 `
 
