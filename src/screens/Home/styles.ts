@@ -57,6 +57,15 @@ export const ContainerButtonSearch = styled.TouchableOpacity`
   right: 20px;
 `
 
+export const ContainerButtonRefresh = styled.TouchableOpacity`
+  background: ${({ theme }) => theme.COLORS.ARCOIRISINDIGO};
+  padding: 15px;
+  border-radius: 100px;
+  position: absolute;
+  bottom: 190px;
+  right: 20px;
+`
+
 export const ButtonText = styled.Text`
    font-size: ${RFValue(14)}px;
 `

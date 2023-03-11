@@ -4,6 +4,7 @@ import { gql, useQuery } from "@apollo/client"
 import { faComment } from "@fortawesome/free-regular-svg-icons/faComment"
 import { faHeart } from "@fortawesome/free-regular-svg-icons/faHeart"
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons/faHeart"
+import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash"
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
 import { useNavigation } from "@react-navigation/native"
 import { RFValue } from "react-native-responsive-fontsize"
@@ -15,6 +16,7 @@ import {
   ConnectImage,
   ConnectText,
   Container,
+  ContainerProfile,
   ContainerProfileFooter,
   ContainerProfileHeader,
   ContainerProfileName,
@@ -79,17 +81,25 @@ const Connect: React.FC<connectProps> = ({ connectItem }) => {
     <Container onPress={navigate}>
       <>
         <ContainerProfileHeader>
-          <ProfileImg
-            source={
-              connectItem.owner.picture != "undefined"
-                ? { uri: connectItem.owner.picture }
-                : ImageProfileNull
-            }
-          />
-          <ContainerProfileName>
-            <ProfileName>{connectItem.owner.name}</ProfileName>
-            <ProfileUser>@{connectItem.owner.username}</ProfileUser>
-          </ContainerProfileName>
+          <ContainerProfile>
+            <ProfileImg
+              source={
+                connectItem.owner.picture != "undefined"
+                  ? { uri: connectItem.owner.picture }
+                  : ImageProfileNull
+              }
+            />
+            <ContainerProfileName>
+              <ProfileName>{connectItem.owner.name}</ProfileName>
+              <ProfileUser>@{connectItem.owner.username}</ProfileUser>
+            </ContainerProfileName>
+          </ContainerProfile>
+          {connectItem.owner.username == authData?.userName ? <FontAwesomeIcon
+            icon={faTrash}
+            size={RFValue(16)}
+            color="red"
+          /> : <></>}
+
         </ContainerProfileHeader>
         <ConnectText>{connectItem.text}</ConnectText>
       </>

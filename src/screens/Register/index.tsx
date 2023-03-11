@@ -25,6 +25,7 @@ import {
 
 import { gql, useMutation } from "@apollo/client"
 import ImagemProfileNull from "../../../assets/imageProfileNull.png"
+import { Loading } from "../../components/Loading"
 
 const CREATE_USER = gql`
   mutation createUser($userInput: CreateUserInput!) {
@@ -50,7 +51,7 @@ const Register: React.FC = () => {
   const [success, setSuccess] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  const [createUser, { }] = useMutation(CREATE_USER, {
+  const [createUser, { loading }] = useMutation(CREATE_USER, {
     onCompleted() {
       navigation.navigate("Login" as never)
     }
@@ -137,8 +138,8 @@ const Register: React.FC = () => {
           </TextRegisterButton>
         </RegisterView>
 
-        <Button onPress={submit}>
-          <TextButton>Cadastrar</TextButton>
+        <Button onPress={submit} disabled={loading}>
+          {loading ? <Loading /> : <TextButton>Cadastrar</TextButton>}
         </Button>
       </View>
     </Container>

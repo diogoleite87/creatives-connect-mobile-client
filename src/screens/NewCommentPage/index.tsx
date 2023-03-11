@@ -14,6 +14,7 @@ import {
   TextButton
 } from "./styles"
 import { useNavigation } from "@react-navigation/native"
+import { Loading } from "../../components/Loading"
 
 interface propsNewCommentPage {
   route?: {
@@ -60,7 +61,7 @@ const NewCommentPage: React.FC<propsNewCommentPage> = ({ route }) => {
     })
   }
 
-  const [submitComment, { }] = useMutation(MAKE_COMMENT, {
+  const [submitComment, { loading }] = useMutation(MAKE_COMMENT, {
     onCompleted(data) {
       navigate.navigate('Home' as never)
     }
@@ -75,8 +76,8 @@ const NewCommentPage: React.FC<propsNewCommentPage> = ({ route }) => {
           placeholder="Comentário"
           onChangeText={(text: string) => setComment(text)}
         />
-        <ButtonEditSubmit onPress={submit}>
-          <TextButton>Comentar</TextButton>
+        <ButtonEditSubmit onPress={submit} disabled={loading}>
+          {loading ? <Loading /> : <TextButton>Comentar</TextButton>}
         </ButtonEditSubmit>
       </ContentBody>
       <ContentFooter>

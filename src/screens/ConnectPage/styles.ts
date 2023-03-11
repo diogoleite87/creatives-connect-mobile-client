@@ -34,6 +34,8 @@ export const ContainerConnectHeader = styled.TouchableOpacity`
   margin-top: ${RFValue(16)}px;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+
 `
 
 export const ProfileImg = styled.Image`
@@ -73,6 +75,15 @@ export const ContainerProfileFooter = styled.View`
 export const ContainerAwesomeIcon = styled.TouchableOpacity`
    align-items: center;
    flex-direction: row;
+`
+
+export const ContainerButtonDelete = styled.TouchableOpacity`
+   align-items: center;
+`
+
+export const ContainerProfileDirection = styled.View`
+  flex-direction: row;
+  align-items: center;
 `
 
 export const ConnectText = styled.Text`

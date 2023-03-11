@@ -34,6 +34,7 @@ import {
 import { FIND_USER_BY_USERNAME } from "../../graphql/user/queries"
 import { useAuth } from "../../hooks/useAuth"
 import { timestampToDate } from "../../utils/timestampToDate"
+import { Loading } from "../../components/Loading"
 
 interface propsProfile {
     route?: {
@@ -67,74 +68,75 @@ const Profile: React.FC<propsProfile> = ({ route }) => {
 
     const profileUser = route?.params.username!
 
-    const { data: userData } = useQuery<
+    const { data: userData, loading: profileLoading } = useQuery<
         FindUserByUsernameQuery,
         FindUserByUsernameQueryVariables
     >(FIND_USER_BY_USERNAME, {
         variables: { username: profileUser }
     })
 
-    const { data: connectsData } = useQuery(FIND_USER_POSTS, {
+    const { data: connectsData, loading: postsLoading } = useQuery(FIND_USER_POSTS, {
         variables: {
             username: profileUser
         }
     })
 
     return (
-        <Container>
-            <ContainerHeader>
-                <ContainerButtons>
-                    <ButtonBack />
-                    {authData?.userName == route?.params.username ? (
-                        <ButtonSettings navigationScreen={"Settings"} />
-                    ) : (
-                        <></>
-                    )}
-                </ContainerButtons>
-                <ContainerProfile>
-                    <ContainerProfileHeader>
-                        <ContentProfileHeader>
-                            <ProfileImg
-                                source={
-                                    userData?.findUserByUsername.picture != "undefined"
-                                        ? {
-                                            uri: userData?.findUserByUsername.picture!
-                                        }
-                                        : ImageProfileNull
-                                }
-                            />
-                            <ContainerProfileName>
-                                <ProfileName>{userData?.findUserByUsername.name}</ProfileName>
-                                <ProfileUser>
-                                    @{userData?.findUserByUsername.username}
-                                </ProfileUser>
-                            </ContainerProfileName>
-                        </ContentProfileHeader>
-                        {route?.params.username != authData?.userName ? (
-                            <ButtonFollow
-                                userFollow={userData?.findUserByUsername.username!}
-                            />
+        postsLoading || profileLoading ? <Loading /> :
+            <Container>
+                <ContainerHeader>
+                    <ContainerButtons>
+                        <ButtonBack />
+                        {authData?.userName == route?.params.username ? (
+                            <ButtonSettings navigationScreen={"Settings"} />
                         ) : (
                             <></>
                         )}
-                    </ContainerProfileHeader>
-                    <ProfileBio>{userData?.findUserByUsername.biography}</ProfileBio>
-                    <ContainerProfileFooter>
-                        <ContainerAwesomeIcon>
-                            <FontAwesomeIcon icon={faLocationDot} size={RFValue(12)} />
-                            <ProfileCity>{userData?.findUserByUsername.city}</ProfileCity>
-                        </ContainerAwesomeIcon>
-                        <ContainerAwesomeIcon>
-                            <FontAwesomeIcon icon={faCakeCandles} size={RFValue(12)} />
-                            <ProfileBithday>
-                                {timestampToDate(userData?.findUserByUsername.birthday)}
-                            </ProfileBithday>
-                        </ContainerAwesomeIcon>
-                    </ContainerProfileFooter>
-                    <ConnectList connects={connectsData?.findUserPosts} />
-                </ContainerProfile>
-            </ContainerHeader>
-        </Container>
+                    </ContainerButtons>
+                    <ContainerProfile>
+                        <ContainerProfileHeader>
+                            <ContentProfileHeader>
+                                <ProfileImg
+                                    source={
+                                        userData?.findUserByUsername.picture != "undefined"
+                                            ? {
+                                                uri: userData?.findUserByUsername.picture!
+                                            }
+                                            : ImageProfileNull
+                                    }
+                                />
+                                <ContainerProfileName>
+                                    <ProfileName>{userData?.findUserByUsername.name}</ProfileName>
+                                    <ProfileUser>
+                                        @{userData?.findUserByUsername.username}
+                                    </ProfileUser>
+                                </ContainerProfileName>
+                            </ContentProfileHeader>
+                            {route?.params.username != authData?.userName ? (
+                                <ButtonFollow
+                                    userFollow={userData?.findUserByUsername.username!}
+                                />
+                            ) : (
+                                <></>
+                            )}
+                        </ContainerProfileHeader>
+                        <ProfileBio>{userData?.findUserByUsername.biography}</ProfileBio>
+                        <ContainerProfileFooter>
+                            <ContainerAwesomeIcon>
+                                <FontAwesomeIcon icon={faLocationDot} size={RFValue(12)} />
+                                <ProfileCity>{userData?.findUserByUsername.city}</ProfileCity>
+                            </ContainerAwesomeIcon>
+                            <ContainerAwesomeIcon>
+                                <FontAwesomeIcon icon={faCakeCandles} size={RFValue(12)} />
+                                <ProfileBithday>
+                                    {timestampToDate(userData?.findUserByUsername.birthday)}
+                                </ProfileBithday>
+                            </ContainerAwesomeIcon>
+                        </ContainerProfileFooter>
+                        <ConnectList connects={connectsData?.findUserPosts} />
+                    </ContainerProfile>
+                </ContainerHeader>
+            </Container>
     )
 }
 

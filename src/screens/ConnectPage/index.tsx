@@ -5,6 +5,7 @@ import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons/faHea
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
 import { useNavigation } from "@react-navigation/native"
 import React, { useState } from "react"
+import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash"
 import { RFValue } from "react-native-responsive-fontsize"
 import ImageProfileNull from "../../../assets/imageProfileNull.png"
 import { ButtonBack } from "../../components/ButtonBack"
@@ -16,9 +17,11 @@ import {
     ConnectText,
     Container,
     ContainerAwesomeIcon,
+    ContainerButtonDelete,
     ContainerComment,
     ContainerConnectHeader,
     ContainerHeader,
+    ContainerProfileDirection,
     ContainerProfileFooter,
     ContainerProfileName,
     ProfileImg,
@@ -28,6 +31,7 @@ import {
     TextFooter
 } from "./styles"
 import { useAuth } from "../../hooks/useAuth"
+import { Loading } from "../../components/Loading"
 
 interface propsConnect {
     route?: {
@@ -67,6 +71,11 @@ const UNLIKE_POST = gql`
         unlikePost(username: $username, postId: $postId)
     }
 `
+const DELETE_POST = gql`
+  mutation deletePost($postId: String!) {
+    deletePost(postId: $postId)
+  }
+`
 
 const ConnectPage: React.FC<propsConnect> = ({ route }) => {
     const navigation = useNavigation()
@@ -76,7 +85,7 @@ const ConnectPage: React.FC<propsConnect> = ({ route }) => {
     const [likes, setLikes] = useState<number>(route?.params.connect.likes as number)
     const username = authData?.userName
 
-    const { data } = useQuery(FIND_POST_COMMENTS, {
+    const { data, loading: findPostCommentsLoading } = useQuery(FIND_POST_COMMENTS, {
         variables: { postId: route?.params.connect.id }
     })
 
@@ -104,76 +113,97 @@ const ConnectPage: React.FC<propsConnect> = ({ route }) => {
         },
     })
 
+    const [deleteConnect, { loading: deleteConnectLoading }] = useMutation(DELETE_POST, {
+        variables: { postId: route?.params.connect.id },
+        onCompleted(data, clientOptions) {
+            navigation.navigate('Home' as never)
+        },
+    })
+
     const submitLike = async () => {
 
         hasLiked ? unlikePost() : likePost()
     }
 
     return (
-        <Container>
-            <ContainerHeader>
-                <ButtonBack />
-                <ContainerConnectHeader
-                    onPress={() =>
-                        navigation.navigate("Profile" as never, {
-                            username: route?.params.connect.owner.username!
-                        })
-                    }
-                >
-                    <ProfileImg
-                        source={
-                            route?.params.connect.owner.picture != "undefined"
-                                ? { uri: route?.params.connect.owner.picture }
-                                : ImageProfileNull
-                        }
-                    />
-                    <ContainerProfileName>
-                        <ProfileName>{route?.params.connect.owner.name}</ProfileName>
-                        <ProfileUser>@{route?.params.connect.owner.username}</ProfileUser>
-                    </ContainerProfileName>
-                </ContainerConnectHeader>
-                <ConnectText>{route?.params.connect.text}</ConnectText>
-                {route?.params.connect.picture != "undefined" ? (
-                    <ConnectImage source={{ uri: route?.params.connect.picture }} />
-                ) : (
-                    <></>
-                )}
-                <TextDate>{timestampToDate(route?.params.connect.createdAt!)}</TextDate>
-                <ContainerProfileFooter>
-                    <ContainerAwesomeIcon
+        findPostCommentsLoading || deleteConnectLoading ? <Loading /> :
+            <Container>
+                <ContainerHeader>
+                    <ButtonBack />
+                    <ContainerConnectHeader
                         onPress={() =>
-                            navigation.navigate("NewCommentPage" as never, {
-                                connect: route?.params
+                            navigation.navigate("Profile" as never, {
+                                username: route?.params.connect.owner.username!
                             })
                         }
                     >
-                        <FontAwesomeIcon icon={faComment} size={RFValue(18)} />
-                        <TextFooter>
-                            {data ? data.findPostComments.length : 0} comentários
-                        </TextFooter>
-                    </ContainerAwesomeIcon>
-                    <ContainerAwesomeIcon onPress={submitLike}>
-                        {hasLiked ? (
-                            <FontAwesomeIcon
-                                icon={faHeartSolid}
-                                size={RFValue(18)}
-                                color="red"
+                        <ContainerProfileDirection>
+                            <ProfileImg
+                                source={
+                                    route?.params.connect.owner.picture != "undefined"
+                                        ? { uri: route?.params.connect.owner.picture }
+                                        : ImageProfileNull
+                                }
                             />
-                        ) : (
-                            <FontAwesomeIcon
-                                icon={faHeart}
-                                size={RFValue(18)}
-                                color="black"
-                            />
-                        )}
-                        <TextFooter>{likes} curtidas</TextFooter>
-                    </ContainerAwesomeIcon>
-                </ContainerProfileFooter>
-            </ContainerHeader>
-            <ContainerComment>
-                {data && <CommentList comments={data.findPostComments} />}
-            </ContainerComment>
-        </Container>
+                            <ContainerProfileName>
+                                <ProfileName>{route?.params.connect.owner.name}</ProfileName>
+                                <ProfileUser>@{route?.params.connect.owner.username}</ProfileUser>
+                            </ContainerProfileName>
+                        </ContainerProfileDirection>
+
+                        {authData?.userName == route?.params.connect.owner.username ?
+                            <ContainerButtonDelete onPress={() => deleteConnect()}>
+                                <FontAwesomeIcon
+                                    icon={faTrash}
+                                    size={RFValue(16)}
+                                    color="red"
+                                />
+                            </ContainerButtonDelete> : <></>}
+
+
+                    </ContainerConnectHeader>
+                    <ConnectText>{route?.params.connect.text}</ConnectText>
+                    {route?.params.connect.picture != "undefined" ? (
+                        <ConnectImage source={{ uri: route?.params.connect.picture }} />
+                    ) : (
+                        <></>
+                    )}
+                    <TextDate>{timestampToDate(route?.params.connect.createdAt!)}</TextDate>
+                    <ContainerProfileFooter>
+                        <ContainerAwesomeIcon
+                            onPress={() =>
+                                navigation.navigate("NewCommentPage" as never, {
+                                    connect: route?.params
+                                })
+                            }
+                        >
+                            <FontAwesomeIcon icon={faComment} size={RFValue(18)} />
+                            <TextFooter>
+                                {data ? data.findPostComments.length : 0} comentários
+                            </TextFooter>
+                        </ContainerAwesomeIcon>
+                        <ContainerAwesomeIcon onPress={submitLike}>
+                            {hasLiked ? (
+                                <FontAwesomeIcon
+                                    icon={faHeartSolid}
+                                    size={RFValue(18)}
+                                    color="red"
+                                />
+                            ) : (
+                                <FontAwesomeIcon
+                                    icon={faHeart}
+                                    size={RFValue(18)}
+                                    color="black"
+                                />
+                            )}
+                            <TextFooter>{likes} curtidas</TextFooter>
+                        </ContainerAwesomeIcon>
+                    </ContainerProfileFooter>
+                </ContainerHeader>
+                <ContainerComment>
+                    {data && <CommentList comments={data.findPostComments} />}
+                </ContainerComment>
+            </Container>
     )
 }
 

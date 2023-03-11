@@ -10,6 +10,7 @@ import { CreatePostInput } from "../../generated/api-types"
 import { useNavigation } from "@react-navigation/native"
 import { imageToBase64 } from "../../utils/imageToBase64"
 import { useAuth } from "../../hooks/useAuth"
+import { Loading } from "../../components/Loading"
 
 const NewConnectPage: React.FC = () => {
 
@@ -57,10 +58,8 @@ const NewConnectPage: React.FC = () => {
                     {image ? <Image source={{ uri: image }} /> : <Image source={NoImage} />}
                     <InputImage setImage={setImage} />
                 </ContainerImg>
-                <ButtonEditSubmit onPress={submit}>
-                    <TextButton>
-                        Connect
-                    </TextButton>
+                <ButtonEditSubmit onPress={submit} disabled={loading}>
+                    {loading ? <Loading /> : <TextButton> Connect </TextButton>}
                 </ButtonEditSubmit>
             </ContentBody>
             <ContentFooter>

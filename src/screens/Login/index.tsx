@@ -22,6 +22,7 @@ import { useAuth } from "../../hooks/useAuth"
 import { useMutation } from "@apollo/client"
 import { LoginMutation, LoginMutationVariables, User } from "../../generated/api-types"
 import { LOGIN } from "../../graphql/auth/mutations"
+import { Loading } from "../../components/Loading"
 
 const Login: React.FC = () => {
   const navigation = useNavigation()
@@ -93,8 +94,8 @@ const Login: React.FC = () => {
           </TextRegisterButton>
         </RegisterView>
 
-        <ButtonSubmit onPress={submit}>
-          <TextButtonSubmit>Entrar</TextButtonSubmit>
+        <ButtonSubmit onPress={submit} disabled={tokenLoading}>
+          {tokenLoading ? <Loading /> : <TextButtonSubmit>Entrar</TextButtonSubmit>}
         </ButtonSubmit>
       </ContentFooter>
     </Container>

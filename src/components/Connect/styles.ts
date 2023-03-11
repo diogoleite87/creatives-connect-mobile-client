@@ -10,6 +10,12 @@ export const Container = styled.TouchableOpacity`
 export const ContainerProfileHeader = styled.View`
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+`
+
+export const ContainerProfile = styled.View`
+  flex-direction: row;
+  align-items: center;
 `
 
 export const ProfileImg = styled.Image`

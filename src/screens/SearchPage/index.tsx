@@ -10,6 +10,7 @@ import { FindUserByUsernameQuery, FindUserByUsernameQueryVariables } from "../..
 import { FIND_USER_BY_USERNAME } from "../../graphql/user/queries"
 import ImagemProfileNull from '../../../assets/imageProfileNull.png'
 import { useAuth } from "../../hooks/useAuth"
+import { Loading } from "../../components/Loading"
 
 const SearchPage: React.FC = () => {
 
@@ -43,7 +44,7 @@ const SearchPage: React.FC = () => {
                     onSubmitEditing={async () => await searchUser()}
                 />
 
-                {isFound ?
+                {isFound && !loading ?
                     <ContainerProfile>
                         <Profile onPress={() => navigation.navigate('Profile', { username: userSearch })}>
                             <ProfileImage source={data?.findUserByUsername.picture != "undefined" ? { uri: data?.findUserByUsername.picture } : ImagemProfileNull} />
@@ -58,7 +59,7 @@ const SearchPage: React.FC = () => {
                         </Profile>
                         {data?.findUserByUsername.username != authData?.userName ? <ButtonFollow userFollow={data?.findUserByUsername.username!} /> : <></>}
                     </ContainerProfile>
-                    : <></>}
+                    : loading ? <Loading /> : <></>}
 
             </ContentHeader>
             <ContentBody>

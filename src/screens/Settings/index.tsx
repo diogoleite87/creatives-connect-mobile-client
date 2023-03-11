@@ -24,6 +24,7 @@ import {
   ProfileUser,
   TextButton
 } from "./styles"
+import { Loading } from "../../components/Loading"
 
 const UPDATE_USER = gql`
   mutation updateUser($username: String!, $updatedUser: UpdateUserInput!) {
@@ -47,7 +48,7 @@ const Settings: React.FC = () => {
 
   const { signOut, authData } = useAuth()
 
-  const { data } = useQuery<
+  const { data, loading: profileLoading } = useQuery<
     FindUserByUsernameQuery,
     FindUserByUsernameQueryVariables
   >(FIND_USER_BY_USERNAME, {
@@ -60,7 +61,7 @@ const Settings: React.FC = () => {
     }
   })
 
-  const [updateUser, { }] = useMutation(UPDATE_USER, {
+  const [updateUser, { loading: updateUserLoading }] = useMutation(UPDATE_USER, {
     onCompleted() {
       signOut()
     }
@@ -88,49 +89,50 @@ const Settings: React.FC = () => {
   }
 
   return (
-    <Container>
-      <ContentHeader>
-        <ButtonBack />
-      </ContentHeader>
-      <ContentBody>
-        <ContainerImg>
-          <ProfileImg
-            source={
-              profileImage ? { uri: profileImage } : ImagemProfileNull
-            }
-          />
-          <InputImage setImage={setProfileImage} />
-          <ProfileUser>@{data?.findUserByUsername.username}</ProfileUser>
-        </ContainerImg>
+    profileLoading ? <Loading /> :
+      <Container>
+        <ContentHeader>
+          <ButtonBack />
+        </ContentHeader>
+        <ContentBody>
+          <ContainerImg>
+            <ProfileImg
+              source={
+                profileImage ? { uri: profileImage } : ImagemProfileNull
+              }
+            />
+            <InputImage setImage={setProfileImage} />
+            <ProfileUser>@{data?.findUserByUsername.username}</ProfileUser>
+          </ContainerImg>
 
-        <Input
-          placeholder="Nome"
-          keyboardType="default"
-          value={nameUpdate}
-          onChangeText={(text: string) => setNameUpdate(text)}
-        />
-        <Input
-          placeholder="Biografia"
-          keyboardType="default"
-          value={biographyUpdate ? biographyUpdate : ""}
-          onChangeText={(text: string) => setbiographyUpdate(text)}
-        />
-        <Input
-          placeholder="Cidade"
-          keyboardType="default"
-          value={cityUpdate}
-          onChangeText={(text: string) => setCityUpdate(text)}
-        />
-      </ContentBody>
-      <ContentFooter>
-        <ButtonEditSubmit onPress={editProfile}>
-          <TextButton>Salvar Alterações</TextButton>
-        </ButtonEditSubmit>
-        <ButtonSignOut onPress={signOut}>
-          <TextButton>Sair do App</TextButton>
-        </ButtonSignOut>
-      </ContentFooter>
-    </Container>
+          <Input
+            placeholder="Nome"
+            keyboardType="default"
+            value={nameUpdate}
+            onChangeText={(text: string) => setNameUpdate(text)}
+          />
+          <Input
+            placeholder="Biografia"
+            keyboardType="default"
+            value={biographyUpdate ? biographyUpdate : ""}
+            onChangeText={(text: string) => setbiographyUpdate(text)}
+          />
+          <Input
+            placeholder="Cidade"
+            keyboardType="default"
+            value={cityUpdate}
+            onChangeText={(text: string) => setCityUpdate(text)}
+          />
+        </ContentBody>
+        <ContentFooter>
+          <ButtonEditSubmit onPress={editProfile}>
+            {updateUserLoading ? <Loading /> : <TextButton>Salvar Alterações</TextButton>}
+          </ButtonEditSubmit>
+          <ButtonSignOut onPress={signOut}>
+            <TextButton>Sair do App</TextButton>
+          </ButtonSignOut>
+        </ContentFooter>
+      </Container>
   )
 }
 
