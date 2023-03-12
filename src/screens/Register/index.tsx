@@ -26,6 +26,8 @@ import {
 import { gql, useMutation } from "@apollo/client"
 import ImagemProfileNull from "../../../assets/imageProfileNull.png"
 import { Loading } from "../../components/Loading"
+import { InputDate } from "../../components/InputDate"
+import { dateToTimestamp } from "../../utils/dateToTimestamp"
 
 const CREATE_USER = gql`
   mutation createUser($userInput: CreateUserInput!) {
@@ -50,6 +52,7 @@ const Register: React.FC = () => {
   const [error, setError] = useState<boolean>(false)
   const [success, setSuccess] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [birthday, setbirthday] = useState<Date>(new Date())
 
   const [createUser, { loading }] = useMutation(CREATE_USER, {
     onCompleted() {
@@ -58,6 +61,7 @@ const Register: React.FC = () => {
   })
 
   const submit = async () => {
+
     await createUser({
       variables: {
         userInput: {
@@ -65,7 +69,7 @@ const Register: React.FC = () => {
           password: password,
           name: name,
           city: city,
-          birthday: Date.now(),
+          birthday: dateToTimestamp(birthday),
           biography: ''
         }
       }
@@ -126,6 +130,7 @@ const Register: React.FC = () => {
           onChangeText={(text: string) => setPassword(text)}
           returnKeyType="next"
         />
+        <InputDate date={birthday} setDate={setbirthday} />
       </Content>
 
       <View>
