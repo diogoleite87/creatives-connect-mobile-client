@@ -28,6 +28,7 @@ import ImagemProfileNull from "../../../assets/imageProfileNull.png"
 import { Loading } from "../../components/Loading"
 import { InputDate } from "../../components/InputDate"
 import { dateToTimestamp } from "../../utils/dateToTimestamp"
+import { imageToBase64 } from "../../utils/imageToBase64"
 
 const CREATE_USER = gql`
   mutation createUser($userInput: CreateUserInput!) {
@@ -62,6 +63,8 @@ const Register: React.FC = () => {
 
   const submit = async () => {
 
+    const imageBase64 = await imageToBase64(image)
+
     await createUser({
       variables: {
         userInput: {
@@ -70,7 +73,8 @@ const Register: React.FC = () => {
           name: name,
           city: city,
           birthday: dateToTimestamp(birthday),
-          biography: ''
+          biography: '',
+          picture: imageBase64
         }
       }
     })
