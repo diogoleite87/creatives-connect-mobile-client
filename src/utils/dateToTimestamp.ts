@@ -1,4 +1,3 @@
-export function dateToTimestamp(dateString: string): number {
-    const date = new Date(dateString);
-    return date.getTime() / 1000;
+export function dateToTimestamp(date: Date): number {
+    return date.getTime();
 }
